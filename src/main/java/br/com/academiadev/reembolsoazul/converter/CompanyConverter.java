@@ -10,8 +10,11 @@ public class CompanyConverter implements Converter<Company, CompanyDTO> {
 
 	@Override
 	public CompanyDTO toDTO(Company entity) {
-		// TODO implementar
-		return null;
+		CompanyDTO companyDTO = new CompanyDTO();
+		companyDTO.setName(entity.getName());
+		companyDTO.setCompanyAdminCode(entity.getCompanyAdminCode());
+		companyDTO.setCompanyUserCode(entity.getCompanyUserCode());
+		return companyDTO;
 	}
 
 	@Override
