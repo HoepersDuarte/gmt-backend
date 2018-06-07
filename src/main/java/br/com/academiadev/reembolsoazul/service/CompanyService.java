@@ -25,8 +25,8 @@ public class CompanyService {
 
 		// gerar codigos de admin e user aqui ou no converter?
 		// TODO gerar codigos de admin de user
-		company.setCompanyAdminCode("adminCode");
-		company.setCompanyUserCode("userCode");
+		company.setCompanyAdminCode(companyDTO.getName()+"-admin");
+		company.setCompanyUserCode(companyDTO.getName()+"-user");
 		companyRepository.save(company);
 	}
 
