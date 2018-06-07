@@ -14,6 +14,7 @@ public class UserConverter implements Converter<User, UserDTO> {
 		userDTO.setName(entity.getName());
 		userDTO.setEmail(entity.getEmail());
 		userDTO.setPassword(entity.getPassword());
+		userDTO.setCompanyCode(entity.getCompany().getName());
 		//TODO como vai fazer da empresa
 		return userDTO;
 	}
