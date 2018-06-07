@@ -11,22 +11,22 @@ import javax.persistence.Table;
 
 @Table(name = "company")
 @Entity
-public class Company implements Serializable{
+public class Company implements Serializable {
 	private static final long serialVersionUID = 1L;
-	
+
 	@Id
 	@Column
 	private Long id;
-	
+
 	@Column
 	private String name;
-	
+
 	@Column
 	private String companyAdminCode;
-	
+
 	@Column
 	private String companyUserCode;
-	
+
 	@OneToMany(mappedBy = "company")
 	private List<User> users;
 
