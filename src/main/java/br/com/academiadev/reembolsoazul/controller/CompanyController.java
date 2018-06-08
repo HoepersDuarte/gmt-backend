@@ -33,9 +33,9 @@ public class CompanyController {
 		companyService.register(companyDTO);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
-	
+
 	@ApiOperation(value = "Retorna todas as empresas cadastradas", response = CompanyDTO[].class)
-	@ApiResponses(value = {@ApiResponse(code = 200, message = "Lista recebida com sucesso")})
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Lista recebida com sucesso") })
 	@GetMapping("/")
 	public ResponseEntity<List<CompanyDTO>> getAll() {
 		return new ResponseEntity<>(companyService.findAll(), HttpStatus.OK);

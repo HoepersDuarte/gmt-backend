@@ -1,17 +1,17 @@
 package br.com.academiadev.reembolsoazul.dto;
 
 public class RefundDTO {
-	
+
 	private String name;
-	
+
 	private String value;
-	
+
 	private String date;
-	
+
 	private String file;
-	
+
 	private Long user;
-	
+
 	private String refundCategory;
 
 	public String getName() {

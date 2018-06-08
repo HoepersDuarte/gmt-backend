@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import br.com.academiadev.reembolsoazul.converter.RefundConverter;
 import br.com.academiadev.reembolsoazul.dto.RefundDTO;
-import br.com.academiadev.reembolsoazul.dto.UserDTO;
 import br.com.academiadev.reembolsoazul.exception.UserNotFoundException;
 import br.com.academiadev.reembolsoazul.model.Refund;
 import br.com.academiadev.reembolsoazul.model.RefundStatus;
@@ -25,7 +24,7 @@ public class RefundService {
 
 	@Autowired
 	private RefundRepository refundRepository;
-	
+
 	@Autowired
 	private UserRepository userRepository;
 
@@ -36,20 +35,20 @@ public class RefundService {
 
 		refundRepository.save(refund);
 	}
-	
+
 	public List<RefundDTO> findAll() {
 		return Util.toList(refundRepository.findAll()).stream().map(e -> {
 			return refundConverter.toDTO(e);
 		}).collect(Collectors.toList());
 	}
-	
+
 	private User findUser(RefundDTO refundDTO) throws UserNotFoundException {
 		List<User> user = userRepository.findById(refundDTO.getUser());
-		if(user.size() == 1) {
+		if (user.size() == 1) {
 			return user.get(0);
 		}
 		throw new UserNotFoundException();
-		
+
 	}
 
 }

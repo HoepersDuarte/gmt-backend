@@ -16,33 +16,33 @@ import javax.persistence.Table;
 
 @Table(name = "refund")
 @Entity
-public class Refund implements Serializable{
+public class Refund implements Serializable {
 	private static final long serialVersionUID = 1L;
-	
+
 	@Id
 	@Column
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
-	
+
 	@Column
 	private String name;
-	
+
 	@Column
 	private BigDecimal value;
-	
+
 	@Column
 	private LocalDate date;
-	
+
 	@Column
-	private String file;//TODO como armazena arquivos de nota fiscal
-	
-	@OneToOne//TODO ver como e o mapeamento
+	private String file;// TODO como armazena arquivos de nota fiscal
+
+	@OneToOne // TODO ver como e o mapeamento
 	private User user;
-	
+
 	@Enumerated(EnumType.ORDINAL)
 	@Column
 	private RefundCategory refundCategory;
-	
+
 	@Enumerated(EnumType.ORDINAL)
 	@Column
 	private RefundStatus refundStatus;

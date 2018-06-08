@@ -15,16 +15,16 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @Configuration
 @EnableSwagger2
 public class SwaggerConfig {
-	
+
 	@Bean
 	public Docket apis() {
 		return new Docket(DocumentationType.SWAGGER_2).select()//
 				.apis(RequestHandlerSelectors.basePackage("br.com.academiadev.reembolsoazul"))//
 				.paths(PathSelectors.any()).build().apiInfo(apiInfo());
 	}
-	
+
 	private ApiInfo apiInfo() {
 		return new ApiInfo("titulo", "descricao", "versao", "termos", null, "License", "licenseUrl", new ArrayList<>());
 	}
-	
+
 }

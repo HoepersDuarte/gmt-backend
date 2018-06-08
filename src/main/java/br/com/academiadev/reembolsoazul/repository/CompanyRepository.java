@@ -10,6 +10,6 @@ import br.com.academiadev.reembolsoazul.model.Company;
 @Repository
 public interface CompanyRepository extends CrudRepository<Company, Long> {
 	public List<Company> findByCompanyAdminCode(String companyAdminCode);
-	
+
 	public List<Company> findByCompanyUserCode(String companyUserCode);
 }

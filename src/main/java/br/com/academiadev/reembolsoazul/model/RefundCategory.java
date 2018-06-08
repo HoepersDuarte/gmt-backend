@@ -1,14 +1,13 @@
 package br.com.academiadev.reembolsoazul.model;
 
 public enum RefundCategory {
-	HOSPEDAGEM("HOSPEDAGEM", "Hospedagem"),//
-	ALIMENTACAO("ALIMENTACAO", "Alimentacao"),//
+	HOSPEDAGEM("HOSPEDAGEM", "Hospedagem"), //
+	ALIMENTACAO("ALIMENTACAO", "Alimentacao"), //
 	TRANSPORTE("TRANSPORTE", "Transporte");
-	
-	
+
 	private String id;
 	private String name;
-	
+
 	private RefundCategory(String id, String name) {
 		this.id = id;
 		this.name = name;

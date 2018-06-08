@@ -24,10 +24,10 @@ import io.swagger.annotations.ApiResponses;
 @RestController
 @RequestMapping("/refund")
 public class RefundController {
-	
+
 	@Autowired
 	private RefundService refundService;
-	
+
 	@ApiOperation(value = "Cadastra um reembolso")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Reembolso cadastrado com sucesso") })
 	@PostMapping("/")
@@ -35,12 +35,12 @@ public class RefundController {
 		refundService.register(refundDTO);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
-	
+
 	@ApiOperation(value = "Retorna todos os reembolsos cadastrados", response = RefundDTO[].class)
-	@ApiResponses(value = {@ApiResponse(code = 200, message = "Lista recebida com sucesso")})
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Lista recebida com sucesso") })
 	@GetMapping("/")
 	public ResponseEntity<List<RefundDTO>> getAll() {
 		return new ResponseEntity<>(refundService.findAll(), HttpStatus.OK);
 	}
-	
+
 }

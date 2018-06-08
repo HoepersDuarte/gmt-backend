@@ -18,25 +18,25 @@ import br.com.academiadev.reembolsoazul.util.Util;
 
 @Service
 public class UserService {
-	
+
 	@Autowired
 	private UserConverter userConverter;
-	
+
 	@Autowired
 	private UserRepository userRepository;
-	
+
 	@Autowired
 	private CompanyRepository companyRepository;
-	
+
 	public void register(UserDTO userDTO) throws CompanyNotFoundException {
-		//o que fica no service e o que fica no converter?
+		// o que fica no service e o que fica no converter?
 		User user = userConverter.toEntity(userDTO);
-		
+
 		getUserTypeAndCompany(user, userDTO);
-		
+
 		userRepository.save(user);
 	}
-	
+
 	public List<UserDTO> findAll() {
 		return Util.toList(userRepository.findAll()).stream().map(e -> {
 			return userConverter.toDTO(e);
@@ -44,24 +44,24 @@ public class UserService {
 	}
 
 	private void getUserTypeAndCompany(User user, UserDTO userDTO) throws CompanyNotFoundException {
-		
-		//Find by admCode
+
+		// Find by admCode
 		List<Company> companies = companyRepository.findByCompanyAdminCode(userDTO.getCompanyCode());
-		if(companies.size() == 1) {
+		if (companies.size() == 1) {
 			user.setCompany(companies.get(0));
 			user.setUserType(UserType.ADMIN);
 			return;
 		}
-		
-		//Find by userCode
+
+		// Find by userCode
 		companies = companyRepository.findByCompanyUserCode(userDTO.getCompanyCode());
-		if(companies.size() == 1) {
+		if (companies.size() == 1) {
 			user.setCompany(companies.get(0));
 			user.setUserType(UserType.COMMONUSER);
 			return;
 		}
-		
+
 		throw new CompanyNotFoundException();
 	}
-	
+
 }

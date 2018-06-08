@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.academiadev.reembolsoazul.dto.CompanyDTO;
 import br.com.academiadev.reembolsoazul.dto.UserDTO;
 import br.com.academiadev.reembolsoazul.exception.CompanyNotFoundException;
 import br.com.academiadev.reembolsoazul.service.UserService;
@@ -24,10 +23,10 @@ import io.swagger.annotations.ApiResponses;
 @RestController
 @RequestMapping("/user")
 public class UserController {
-	
+
 	@Autowired
 	private UserService userService;
-	
+
 	@ApiOperation(value = "Cadastra um usuario")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Usuario cadastrado com sucesso") })
 	@PostMapping("/")
@@ -35,12 +34,12 @@ public class UserController {
 		userService.register(userDTO);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
-	
+
 	@ApiOperation(value = "Retorna todos os usuarios cadastrados", response = UserDTO[].class)
-	@ApiResponses(value = {@ApiResponse(code = 200, message = "Lista recebida com sucesso")})
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Lista recebida com sucesso") })
 	@GetMapping("/")
 	public ResponseEntity<List<UserDTO>> getAll() {
 		return new ResponseEntity<>(userService.findAll(), HttpStatus.OK);
 	}
-	
+
 }

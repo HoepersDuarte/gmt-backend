@@ -31,7 +31,7 @@ public class RefundConverter implements Converter<Refund, RefundDTO> {
 		Refund refund = new Refund();
 		refund.setName(dto.getName());
 		refund.setFile(dto.getFile());
-		refund.setRefundCategory(RefundCategory.valueOf(dto.getRefundCategory()));
+		refund.setRefundCategory(RefundCategory.valueOf(dto.getRefundCategory()));// TODO Exceptions
 		refund.setDate(LocalDate.parse(dto.getDate(), DateTimeFormatter.ofPattern("dd/MM/yyyy")));
 		refund.setValue(new BigDecimal(dto.getValue()));
 		// user adicionado no service

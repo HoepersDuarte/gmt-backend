@@ -1,13 +1,13 @@
 package br.com.academiadev.reembolsoazul.model;
 
 public enum RefundStatus {
-	ACCEPTED("ACCEPTED", "Accepted"),//
-	REFUSED("REFUSED", "Refused"),//
+	ACCEPTED("ACCEPTED", "Accepted"), //
+	REFUSED("REFUSED", "Refused"), //
 	WAITING("WAITING", "Waiting");
-	
+
 	private String id;
 	private String name;
-	
+
 	private RefundStatus(String id, String name) {
 		this.id = id;
 		this.name = name;
