@@ -31,7 +31,7 @@ public class RefundService {
 	public void register(RefundDTO refundDTO) throws UserNotFoundException {
 		Refund refund = refundConverter.toEntity(refundDTO);
 		refund.setRefundStatus(RefundStatus.WAITING);
-		refund.setUser(findUser(refundDTO));
+		refund.setUser(findUser(refundDTO.getUser()));
 
 		refundRepository.save(refund);
 	}
@@ -42,8 +42,8 @@ public class RefundService {
 		}).collect(Collectors.toList());
 	}
 
-	private User findUser(RefundDTO refundDTO) throws UserNotFoundException {
-		List<User> user = userRepository.findById(refundDTO.getUser());
+	private User findUser(Long userId) throws UserNotFoundException {
+		List<User> user = userRepository.findById(userId);
 		if (user.size() == 1) {
 			return user.get(0);
 		}

@@ -32,7 +32,7 @@ public class UserService {
 		// o que fica no service e o que fica no converter?
 		User user = userConverter.toEntity(userDTO);
 
-		getUserTypeAndCompany(user, userDTO);
+		getUserTypeAndCompany(user, userDTO.getCompanyCode());
 
 		userRepository.save(user);
 	}
@@ -43,10 +43,10 @@ public class UserService {
 		}).collect(Collectors.toList());
 	}
 
-	private void getUserTypeAndCompany(User user, UserDTO userDTO) throws CompanyNotFoundException {
+	private void getUserTypeAndCompany(User user, String companyCode) throws CompanyNotFoundException {
 
 		// Find by admCode
-		List<Company> companies = companyRepository.findByCompanyAdminCode(userDTO.getCompanyCode());
+		List<Company> companies = companyRepository.findByCompanyAdminCode(companyCode);
 		if (companies.size() == 1) {
 			user.setCompany(companies.get(0));
 			user.setUserType(UserType.ADMIN);
@@ -54,7 +54,7 @@ public class UserService {
 		}
 
 		// Find by userCode
-		companies = companyRepository.findByCompanyUserCode(userDTO.getCompanyCode());
+		companies = companyRepository.findByCompanyUserCode(companyCode);
 		if (companies.size() == 1) {
 			user.setCompany(companies.get(0));
 			user.setUserType(UserType.COMMONUSER);

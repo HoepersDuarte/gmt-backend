@@ -9,7 +9,9 @@ import org.springframework.stereotype.Service;
 import br.com.academiadev.reembolsoazul.converter.CompanyConverter;
 import br.com.academiadev.reembolsoazul.dto.CompanyDTO;
 import br.com.academiadev.reembolsoazul.model.Company;
+import br.com.academiadev.reembolsoazul.model.UserType;
 import br.com.academiadev.reembolsoazul.repository.CompanyRepository;
+import br.com.academiadev.reembolsoazul.util.CompanyTokenHelper;
 import br.com.academiadev.reembolsoazul.util.Util;
 
 @Service
@@ -23,10 +25,12 @@ public class CompanyService {
 	public void register(CompanyDTO companyDTO) {
 		Company company = companyConverter.toEntity(companyDTO);
 
-		// gerar codigos de admin e user aqui ou no converter?
-		// TODO gerar codigos de admin de user
-		company.setCompanyAdminCode(companyDTO.getName() + "-admin");
-		company.setCompanyUserCode(companyDTO.getName() + "-user");
+		//company.setCompanyAdminCode(companyDTO.getName() + "-admin");
+		//company.setCompanyUserCode(companyDTO.getName() + "-user");
+		
+		company.setCompanyAdminCode(CompanyTokenHelper.generateToken(companyDTO.getName(), UserType.ADMIN));
+		company.setCompanyUserCode(CompanyTokenHelper.generateToken(companyDTO.getName(), UserType.COMMONUSER));
+		
 		companyRepository.save(company);
 	}
 

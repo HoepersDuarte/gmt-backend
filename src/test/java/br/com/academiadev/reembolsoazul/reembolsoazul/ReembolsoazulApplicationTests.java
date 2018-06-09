@@ -30,6 +30,7 @@ import br.com.academiadev.reembolsoazul.model.UserType;
 import br.com.academiadev.reembolsoazul.repository.CompanyRepository;
 import br.com.academiadev.reembolsoazul.repository.RefundRepository;
 import br.com.academiadev.reembolsoazul.repository.UserRepository;
+import br.com.academiadev.reembolsoazul.util.CompanyTokenHelper;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -164,6 +165,19 @@ public class ReembolsoazulApplicationTests {
 				&& refund.getUser().getName().equals(user.getName())
 				&& refund.getRefundCategory().equals(RefundCategory.ALIMENTACAO)
 				&& refund.getRefundStatus().equals(RefundStatus.WAITING));
+	}
+
+	@Test
+	public void companyCodeGeneration() {
+		String companyName = "Empresa 1";
+		UserType userType = UserType.ADMIN;
+		String hash1 = CompanyTokenHelper.generateToken(companyName, userType);
+
+		companyName = "Empresa 1";
+		userType = UserType.COMMONUSER;
+		String hash2 = CompanyTokenHelper.generateToken(companyName, userType);
+
+		Assert.assertTrue(!hash1.equals(hash2));
 	}
 
 }
