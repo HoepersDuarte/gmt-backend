@@ -12,7 +12,8 @@ public class CompanyTokenHelper {
 	private static Random randomGenerator = new Random();
 
 	public static String generateToken(String companyName, UserType userType) {
-		String baseString = companyName + userType.toString() + randomGenerator.nextInt();
+		String baseString = companyName + userType.toString() + randomGenerator.nextInt();// Com numero aleatorio
+		// String baseString = companyName + userType.toString();//Sem numero aleatorio
 
 		int hashCode = baseString.hashCode();
 		String tokenString = Integer.toString(hashCode);

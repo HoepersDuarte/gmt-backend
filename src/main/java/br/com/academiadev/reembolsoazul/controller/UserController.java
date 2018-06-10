@@ -11,7 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.academiadev.reembolsoazul.dto.UserDTO;
+import br.com.academiadev.reembolsoazul.dto.UserRegisterDTO;
+import br.com.academiadev.reembolsoazul.dto.UserViewDTO;
 import br.com.academiadev.reembolsoazul.exception.CompanyNotFoundException;
 import br.com.academiadev.reembolsoazul.service.UserService;
 import io.swagger.annotations.Api;
@@ -30,15 +31,16 @@ public class UserController {
 	@ApiOperation(value = "Cadastra um usuario")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Usuario cadastrado com sucesso") })
 	@PostMapping("/")
-	public ResponseEntity<UserDTO> register(@RequestBody UserDTO userDTO) throws CompanyNotFoundException {
-		userService.register(userDTO);
+	public ResponseEntity<UserRegisterDTO> register(@RequestBody UserRegisterDTO userRegisterDTO)
+			throws CompanyNotFoundException {
+		userService.register(userRegisterDTO);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
-	@ApiOperation(value = "Retorna todos os usuarios cadastrados", response = UserDTO[].class)
+	@ApiOperation(value = "Retorna todos os usuarios cadastrados", response = UserRegisterDTO[].class)
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Lista recebida com sucesso") })
 	@GetMapping("/")
-	public ResponseEntity<List<UserDTO>> getAll() {
+	public ResponseEntity<List<UserViewDTO>> getAll() {
 		return new ResponseEntity<>(userService.findAll(), HttpStatus.OK);
 	}
 

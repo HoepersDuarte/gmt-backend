@@ -2,8 +2,7 @@ package br.com.academiadev.reembolsoazul.dto;
 
 import io.swagger.annotations.ApiModelProperty;
 
-public class CompanyDTO {
-	// colocar codigos aqui?
+public class CompanyViewDTO {
 
 	@ApiModelProperty(value = "Nome da empresa", example = "Empresa 1")
 	private String name;

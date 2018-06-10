@@ -11,7 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.academiadev.reembolsoazul.dto.CompanyDTO;
+import br.com.academiadev.reembolsoazul.dto.CompanyRegisterDTO;
+import br.com.academiadev.reembolsoazul.dto.CompanyViewDTO;
 import br.com.academiadev.reembolsoazul.service.CompanyService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -29,15 +30,15 @@ public class CompanyController {
 	@ApiOperation(value = "Cadastra uma empresa")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Empresa cadastrada com sucesso") })
 	@PostMapping("/")
-	public ResponseEntity<CompanyDTO> register(@RequestBody CompanyDTO companyDTO) {
-		companyService.register(companyDTO);
+	public ResponseEntity<CompanyRegisterDTO> register(@RequestBody CompanyRegisterDTO companyRegisterDTO) {
+		companyService.register(companyRegisterDTO);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
-	@ApiOperation(value = "Retorna todas as empresas cadastradas", response = CompanyDTO[].class)
+	@ApiOperation(value = "Retorna todas as empresas cadastradas", response = CompanyViewDTO[].class)
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Lista recebida com sucesso") })
 	@GetMapping("/")
-	public ResponseEntity<List<CompanyDTO>> getAll() {
+	public ResponseEntity<List<CompanyViewDTO>> getAll() {
 		return new ResponseEntity<>(companyService.findAll(), HttpStatus.OK);
 	}
 }

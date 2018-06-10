@@ -6,8 +6,10 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import br.com.academiadev.reembolsoazul.converter.UserConverter;
-import br.com.academiadev.reembolsoazul.dto.UserDTO;
+import br.com.academiadev.reembolsoazul.converter.UserRegisterConverter;
+import br.com.academiadev.reembolsoazul.converter.UserViewConverter;
+import br.com.academiadev.reembolsoazul.dto.UserRegisterDTO;
+import br.com.academiadev.reembolsoazul.dto.UserViewDTO;
 import br.com.academiadev.reembolsoazul.exception.CompanyNotFoundException;
 import br.com.academiadev.reembolsoazul.model.Company;
 import br.com.academiadev.reembolsoazul.model.User;
@@ -20,7 +22,10 @@ import br.com.academiadev.reembolsoazul.util.Util;
 public class UserService {
 
 	@Autowired
-	private UserConverter userConverter;
+	private UserRegisterConverter userRegisterConverter;
+
+	@Autowired
+	private UserViewConverter userViewConverter;
 
 	@Autowired
 	private UserRepository userRepository;
@@ -28,18 +33,17 @@ public class UserService {
 	@Autowired
 	private CompanyRepository companyRepository;
 
-	public void register(UserDTO userDTO) throws CompanyNotFoundException {
-		// o que fica no service e o que fica no converter?
-		User user = userConverter.toEntity(userDTO);
+	public void register(UserRegisterDTO userRegisterDTO) throws CompanyNotFoundException {
+		User user = userRegisterConverter.toEntity(userRegisterDTO);
 
-		getUserTypeAndCompany(user, userDTO.getCompanyCode());
+		getUserTypeAndCompany(user, userRegisterDTO.getCompanyCode());
 
 		userRepository.save(user);
 	}
 
-	public List<UserDTO> findAll() {
+	public List<UserViewDTO> findAll() {
 		return Util.toList(userRepository.findAll()).stream().map(e -> {
-			return userConverter.toDTO(e);
+			return userViewConverter.toDTO(e);
 		}).collect(Collectors.toList());
 	}
 

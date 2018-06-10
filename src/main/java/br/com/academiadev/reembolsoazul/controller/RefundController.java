@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.academiadev.reembolsoazul.dto.RefundDTO;
-import br.com.academiadev.reembolsoazul.dto.UserDTO;
 import br.com.academiadev.reembolsoazul.exception.UserNotFoundException;
 import br.com.academiadev.reembolsoazul.service.RefundService;
 import io.swagger.annotations.Api;
@@ -31,7 +30,7 @@ public class RefundController {
 	@ApiOperation(value = "Cadastra um reembolso")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Reembolso cadastrado com sucesso") })
 	@PostMapping("/")
-	public ResponseEntity<UserDTO> register(@RequestBody RefundDTO refundDTO) throws UserNotFoundException {
+	public ResponseEntity<RefundDTO> register(@RequestBody RefundDTO refundDTO) throws UserNotFoundException {
 		refundService.register(refundDTO);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}

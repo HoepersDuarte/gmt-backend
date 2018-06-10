@@ -18,7 +18,7 @@ public class RefundConverter implements Converter<Refund, RefundDTO> {
 		RefundDTO refundDTO = new RefundDTO();
 		refundDTO.setName(entity.getName());
 		refundDTO.setFile(entity.getFile());
-		refundDTO.setUser(entity.getUser().getId());// coloca o id aqui?
+		refundDTO.setUser(entity.getUser().getId());
 		refundDTO.setValue(entity.getValue().toString());
 		refundDTO.setRefundCategory(entity.getRefundCategory().toString());
 		refundDTO.setDate(entity.getDate().toString());

@@ -16,9 +16,10 @@ import org.springframework.test.context.junit4.SpringRunner;
 import br.com.academiadev.reembolsoazul.controller.CompanyController;
 import br.com.academiadev.reembolsoazul.controller.RefundController;
 import br.com.academiadev.reembolsoazul.controller.UserController;
-import br.com.academiadev.reembolsoazul.dto.CompanyDTO;
+import br.com.academiadev.reembolsoazul.dto.CompanyRegisterDTO;
+import br.com.academiadev.reembolsoazul.dto.CompanyViewDTO;
 import br.com.academiadev.reembolsoazul.dto.RefundDTO;
-import br.com.academiadev.reembolsoazul.dto.UserDTO;
+import br.com.academiadev.reembolsoazul.dto.UserRegisterDTO;
 import br.com.academiadev.reembolsoazul.exception.CompanyNotFoundException;
 import br.com.academiadev.reembolsoazul.exception.UserNotFoundException;
 import br.com.academiadev.reembolsoazul.model.Company;
@@ -60,24 +61,24 @@ public class ReembolsoazulApplicationTests {
 
 	@Test
 	public void registerCompany() {
-		CompanyDTO companyDTO = new CompanyDTO();
-		companyDTO.setName("Empresa 100");
-		companyController.register(companyDTO);
-		ResponseEntity<List<CompanyDTO>> companies = companyController.getAll();
+		CompanyRegisterDTO companyRegisterDTO = new CompanyRegisterDTO();
+		companyRegisterDTO.setName("Empresa 100");
+		companyController.register(companyRegisterDTO);
+		ResponseEntity<List<CompanyViewDTO>> companies = companyController.getAll();
 		Assert.assertEquals("Empresa 100", companies.getBody().get(0).getName());
 	}
 
 	@Test
 	public void findByAdmCode() {
 		// register company 1
-		CompanyDTO companyDTO1 = new CompanyDTO();
-		companyDTO1.setName("Empresa 1");
-		companyController.register(companyDTO1);
+		CompanyRegisterDTO companyRegisterDTO1 = new CompanyRegisterDTO();
+		companyRegisterDTO1.setName("Empresa 1");
+		companyController.register(companyRegisterDTO1);
 
 		// register company 2
-		CompanyDTO companyDTO2 = new CompanyDTO();
-		companyDTO1.setName("Empresa 2");
-		companyController.register(companyDTO2);
+		CompanyRegisterDTO companyRegisterDTO2 = new CompanyRegisterDTO();
+		companyRegisterDTO1.setName("Empresa 2");
+		companyController.register(companyRegisterDTO2);
 
 		// get the admin code from the first company
 		List<Company> companies = (List<Company>) companyRepository.findAll();
@@ -90,23 +91,27 @@ public class ReembolsoazulApplicationTests {
 	@Test
 	public void registerUser() {
 		// register company 1
-		CompanyDTO companyDTO1 = new CompanyDTO();
-		companyDTO1.setName("Empresa 1");
-		companyController.register(companyDTO1);
+		CompanyRegisterDTO companyRegisterDTO1 = new CompanyRegisterDTO();
+		companyRegisterDTO1.setName("Empresa 1");
+		companyController.register(companyRegisterDTO1);
 
 		// register company 2
-		CompanyDTO companyDTO2 = new CompanyDTO();
-		companyDTO1.setName("Empresa 2");
-		companyController.register(companyDTO2);
+		CompanyRegisterDTO companyRegisterDTO2 = new CompanyRegisterDTO();
+		companyRegisterDTO1.setName("Empresa 2");
+		companyController.register(companyRegisterDTO2);
+
+		// get the admin code from the first company
+		List<Company> companies = (List<Company>) companyRepository.findAll();
+		String admCodeCompany1 = companies.get(0).getCompanyAdminCode();
 
 		// register the user
-		UserDTO userDTO = new UserDTO();
-		userDTO.setName("name1");
-		userDTO.setEmail("email1");
-		userDTO.setPassword("password1");
-		userDTO.setCompanyCode("Empresa 1-admin");
+		UserRegisterDTO userRegisterDTO = new UserRegisterDTO();
+		userRegisterDTO.setName("name1");
+		userRegisterDTO.setEmail("email1");
+		userRegisterDTO.setPassword("password1");
+		userRegisterDTO.setCompanyCode(admCodeCompany1);
 		try {
-			userController.register(userDTO);
+			userController.register(userRegisterDTO);
 		} catch (CompanyNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -122,16 +127,20 @@ public class ReembolsoazulApplicationTests {
 	@Test
 	public void registerRefund() {
 		// register the company
-		CompanyDTO companyDTO1 = new CompanyDTO();
-		companyDTO1.setName("Empresa 1");
-		companyController.register(companyDTO1);
+		CompanyRegisterDTO companyRegisterDTO1 = new CompanyRegisterDTO();
+		companyRegisterDTO1.setName("Empresa 1");
+		companyController.register(companyRegisterDTO1);
+
+		// get the admin code from the first company
+		List<Company> companies = (List<Company>) companyRepository.findAll();
+		String admCodeCompany1 = companies.get(0).getCompanyAdminCode();
 
 		// register the user
-		UserDTO userDTO = new UserDTO();
+		UserRegisterDTO userDTO = new UserRegisterDTO();
 		userDTO.setName("name1");
 		userDTO.setEmail("email1");
 		userDTO.setPassword("password1");
-		userDTO.setCompanyCode("Empresa 1-admin");
+		userDTO.setCompanyCode(admCodeCompany1);
 		try {
 			userController.register(userDTO);
 		} catch (CompanyNotFoundException e) {
@@ -173,7 +182,7 @@ public class ReembolsoazulApplicationTests {
 		UserType userType = UserType.ADMIN;
 		String hash1 = CompanyTokenHelper.generateToken(companyName, userType);
 
-		companyName = "Empresa 1";
+		companyName = "Empresa 2";
 		userType = UserType.COMMONUSER;
 		String hash2 = CompanyTokenHelper.generateToken(companyName, userType);
 
