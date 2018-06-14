@@ -11,4 +11,5 @@ import br.com.academiadev.reembolsoazul.model.User;
 public interface UserRepository extends CrudRepository<User, Long> {
 
 	public List<User> findById(Long Id);
+	public User findByEmail(String Email);
 }

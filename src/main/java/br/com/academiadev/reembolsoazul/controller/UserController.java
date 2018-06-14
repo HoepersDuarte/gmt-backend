@@ -33,7 +33,7 @@ public class UserController {
 	@PostMapping("/")
 	public ResponseEntity<UserRegisterDTO> register(@RequestBody UserRegisterDTO userRegisterDTO)
 			throws CompanyNotFoundException {
-		userService.register(userRegisterDTO);
+		userService.save(userRegisterDTO);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 

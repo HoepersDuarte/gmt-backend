@@ -1,6 +1,8 @@
 package br.com.academiadev.reembolsoazul.model;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
+import java.util.Collection;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,9 +14,12 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 @Table(name = "userI") // postgre n deixa criar a table user
 @Entity
-public class User implements Serializable {
+public class User implements UserDetails {
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -37,6 +42,9 @@ public class User implements Serializable {
 
 	@ManyToOne
 	private Company company;
+	
+	@Column(name = "last_password_change")
+	private Timestamp lastPasswordChange;
 
 	public Long getId() {
 		return id;
@@ -88,5 +96,48 @@ public class User implements Serializable {
 
 	public void setCompany(Company company) {
 		this.company = company;
+	}
+
+	public Timestamp getLastPasswordChange() {
+		return lastPasswordChange;
+	}
+
+	public void setLastPasswordChange(Timestamp lastPasswordChange) {
+		this.lastPasswordChange = lastPasswordChange;
+	}
+
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getUsername() {
+		return this.email;
+	}
+
+	@Override
+	public boolean isAccountNonExpired() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	@Override
+	public boolean isAccountNonLocked() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	@Override
+	public boolean isCredentialsNonExpired() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	@Override
+	public boolean isEnabled() {
+		// TODO Auto-generated method stub
+		return true;
 	}
 }
