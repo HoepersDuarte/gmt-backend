@@ -7,5 +7,5 @@ import br.com.academiadev.reembolsoazul.model.Refund;
 
 @Repository
 public interface RefundRepository extends CrudRepository<Refund, Long> {
-
+	
 }

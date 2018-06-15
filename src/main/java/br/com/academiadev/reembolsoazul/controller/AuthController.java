@@ -24,13 +24,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.academiadev.reembolsoazul.config.jwt.TokenHelper;
-import br.com.academiadev.reembolsoazul.dto.LoginDTO;
-import br.com.academiadev.reembolsoazul.dto.ChangePasswordDTO;
-import br.com.academiadev.reembolsoazul.model.TokenDTO;
-import br.com.academiadev.reembolsoazul.model.User;
 //import br.com.academiadev.reembolsoazul.service.impl.CustomUserDetailsService;
 import br.com.academiadev.reembolsoazul.common.DeviceProvider;
+import br.com.academiadev.reembolsoazul.config.jwt.TokenHelper;
+import br.com.academiadev.reembolsoazul.dto.ChangePasswordDTO;
+import br.com.academiadev.reembolsoazul.dto.LoginDTO;
+import br.com.academiadev.reembolsoazul.model.TokenDTO;
+import br.com.academiadev.reembolsoazul.model.User;
+import br.com.academiadev.reembolsoazul.service.CustomUserDetailsService;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 
 @RestController
 @RequestMapping(value = "/auth", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -49,38 +52,42 @@ public class AuthController {
 	private DeviceProvider deviceProvider;
 
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
-	public ResponseEntity<?> authenticate(@RequestBody LoginDTO authRequest, HttpServletResponse response, Device device) throws AuthenticationException, IOException {
-		final Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getEmail(), authRequest.getPassword()));
-		SecurityContextHolder.getContext().setAuthentication(authentication);
-		User user = (User) authentication.getPrincipal();
-		String token = tokenHelper.gerarToken(user.getEmail(), device);
-		int expiresIn = tokenHelper.getExpiredIn(device);
+	public ResponseEntity<?> login(@RequestBody LoginDTO authenticationRequest, HttpServletResponse response, Device dispositivo) throws AuthenticationException, IOException {
+		final Authentication autenticacao = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authenticationRequest.getEmail(), authenticationRequest.getPassword()));
+		SecurityContextHolder.getContext().setAuthentication(autenticacao);
+		User usuario = (User) autenticacao.getPrincipal();
+		String token = tokenHelper.generateToken(usuario.getUsername(), dispositivo);
+		int expiresIn = tokenHelper.getExpiredIn(dispositivo);
 		return ResponseEntity.ok(new TokenDTO(token, Long.valueOf(expiresIn)));
 	}
 
 	@RequestMapping(value = "/refresh", method = RequestMethod.POST)
-	public ResponseEntity<?> refreshAuth(HttpServletRequest request, HttpServletResponse response, Principal principal) {
+	public ResponseEntity<?> refresh(HttpServletRequest request, HttpServletResponse response, Principal principal) {
 		String token = tokenHelper.getToken(request);
-		Device device = deviceProvider.getDispositivo(request);
+		Device dispositivo = deviceProvider.getDispositivo(request);
 		if (token != null && principal != null) {
-			String updatedToken = tokenHelper.updateToken(token, device);
-			int expires_in = tokenHelper.getExpiredIn(device);
-			return ResponseEntity.ok(new TokenDTO(updatedToken, Long.valueOf(expires_in)));
+			String tokenAtualizado = tokenHelper.updateToken(token, dispositivo);
+			int expiracao = tokenHelper.getExpiredIn(dispositivo);
+			return ResponseEntity.ok(new TokenDTO(tokenAtualizado, Long.valueOf(expiracao)));
 		} else {
 			TokenDTO tokenDTO = new TokenDTO();
 			return ResponseEntity.accepted().body(tokenDTO);
 		}
 	}
 
+	
 	@RequestMapping(value = "/isauth", method = RequestMethod.POST)
-	public ResponseEntity<?> isAuthenticated(HttpServletRequest request) {
+	@ApiImplicitParams({ //
+		@ApiImplicitParam(name = "Authorization", value = "Authorization token", required = true, dataType = "string", paramType = "header") //
+})
+	public ResponseEntity<?> isAuth(HttpServletRequest request) {
 		String token = tokenHelper.getToken(request);
 
 		if (token != null) {
-			String tokenUser = tokenHelper.getUser(token);
-			if (tokenUser != null) {
+			String usuarioDoToken = tokenHelper.getUser(token);
+			if (usuarioDoToken != null) {
 				UserDetails usuario = userDetailsService.loadUserByUsername(usuarioDoToken);
-				if (tokenHelper.validarToken(token, usuario)) {
+				if (tokenHelper.validateToken(token, usuario)) {
 					Map<String, String> result = new HashMap<>();
 					result.put("isAuth", "true");
 					return ResponseEntity.ok().body(result);

@@ -45,4 +45,24 @@ public class Authorization implements GrantedAuthority {
 		return id;
 	}
 
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
+
+	public Authorization(Long id, String nome) {
+		super();
+		this.id = id;
+		this.nome = nome;
+	}
+	public Authorization() {
+	}
+
 }

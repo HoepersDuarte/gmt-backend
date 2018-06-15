@@ -18,6 +18,4 @@ public class LoginDTO {
 		this.password = password;
 	}
 	
-	
-
 }

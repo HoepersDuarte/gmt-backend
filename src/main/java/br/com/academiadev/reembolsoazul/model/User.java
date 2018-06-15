@@ -1,7 +1,7 @@
 package br.com.academiadev.reembolsoazul.model;
 
-import java.io.Serializable;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Collection;
 
 import javax.persistence.Column;
@@ -44,7 +44,7 @@ public class User implements UserDetails {
 	private Company company;
 	
 	@Column(name = "last_password_change")
-	private Timestamp lastPasswordChange;
+	private LocalDateTime lastPasswordChange;
 
 	public Long getId() {
 		return id;
@@ -98,11 +98,11 @@ public class User implements UserDetails {
 		this.company = company;
 	}
 
-	public Timestamp getLastPasswordChange() {
+	public LocalDateTime getLastPasswordChange() {
 		return lastPasswordChange;
 	}
 
-	public void setLastPasswordChange(Timestamp lastPasswordChange) {
+	public void setLastPasswordChange(LocalDateTime lastPasswordChange) {
 		this.lastPasswordChange = lastPasswordChange;
 	}
 

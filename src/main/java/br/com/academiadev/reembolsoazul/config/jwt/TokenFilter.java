@@ -9,15 +9,16 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.filter.OncePerRequestFilter;
+
+import br.com.academiadev.reembolsoazul.service.CustomUserDetailsService;
 
 public class TokenFilter extends OncePerRequestFilter {
 
 	private TokenHelper tokenHelper;
-	private UserDetailsService userDetailsService;
+	private CustomUserDetailsService userDetailsService;
 
-	public TokenFilter(TokenHelper tokenHelper, UserDetailsService userDetailsService) {
+	public TokenFilter(TokenHelper tokenHelper, CustomUserDetailsService userDetailsService) {
 		this.tokenHelper = tokenHelper;
 		this.userDetailsService = userDetailsService;
 	}
@@ -26,10 +27,10 @@ public class TokenFilter extends OncePerRequestFilter {
 	public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
 		String token = tokenHelper.getToken(request);
 		if (token != null) {
-			String usuarioDoToken = tokenHelper.getUsuario(token);
+			String usuarioDoToken = tokenHelper.getUser(token);
 			if (usuarioDoToken != null) {
 				UserDetails usuario = userDetailsService.loadUserByUsername(usuarioDoToken);
-				if (tokenHelper.validarToken(token, usuario)) {
+				if (tokenHelper.validateToken(token, usuario)) {
 					SecurityContextHolder.getContext().setAuthentication(new AutenticacaoAutorizada(usuario, token));
 				}
 			}

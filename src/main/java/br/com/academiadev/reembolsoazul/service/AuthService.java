@@ -3,17 +3,17 @@ package br.com.academiadev.reembolsoazul.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import br.com.academiadev.auth.model.Autorizacao;
-import br.com.academiadev.auth.repository.AutorizacaoRepository;
+import br.com.academiadev.reembolsoazul.model.Authorization;
+import br.com.academiadev.reembolsoazul.repository.AuthorizationRepository;
 
 @Service
 public class AuthService {
 
 	@Autowired
-	private AutorizacaoRepository autorizacaoRepository;
+	private AuthorizationRepository authorizationRepository;
 
 	public Authorization findByNome(String nome) {
-		return autorizacaoRepository.findByNome(nome);
+		return authorizationRepository.findByNome(nome);
 	}
 
 }

@@ -16,7 +16,7 @@ import br.com.academiadev.reembolsoazul.repository.UserRepository;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
-
+	private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(CustomUserDetailsService.class);
 	@Autowired
 	private UserRepository userRepository;
 
@@ -27,10 +27,10 @@ public class CustomUserDetailsService implements UserDetailsService {
 	private AuthenticationManager authenticationManager;
 
 	@Override
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		User user = userRepository.findByEmail(username);
+	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+		User user = userRepository.findByEmail(email);
 		if (user == null) {
-			throw new UsernameNotFoundException(String.format("No user found with username '%s'.", username));
+			throw new UsernameNotFoundException(String.format("No user found with username '%s'.", email));
 		} else {
 			return user;
 		}
@@ -44,7 +44,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 		authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, oldPassword));
 
 		log.debug("Changing password for user '" + username + "'");
-		Usuario user = (Usuario) loadUserByUsername(username);
+		User user = (User) loadUserByUsername(username);
 
 		user.setPassword(passwordEncoder.encode(newPassword));
 		userRepository.save(user);

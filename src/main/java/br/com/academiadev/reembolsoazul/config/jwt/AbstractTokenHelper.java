@@ -1,6 +1,6 @@
 package br.com.academiadev.reembolsoazul.config.jwt;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,7 +11,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
-public class AbstractTokenUtils {
+public class AbstractTokenHelper {
 
 	@Value("${app.name}")
 	protected String APP_NAME;
@@ -33,7 +33,7 @@ public class AbstractTokenUtils {
 
 	protected SignatureAlgorithm SIGNATURE_ALGORITHM = SignatureAlgorithm.HS512;
 
-	public AbstractTokenUtils() {
+	public AbstractTokenHelper() {
 		super();
 	}
 
@@ -59,13 +59,13 @@ public class AbstractTokenUtils {
 		return claims;
 	}
 
-	protected Date generateExpirationDate(Device device) {
+	protected LocalDateTime generateExpirationDate(Device device) {
 		long expiresIn = device.isTablet() || device.isMobile() ? MOBILE_EXPIRES_IN : EXPIRES_IN;
-		return new Date(timeProvider.getCurrentDate().getTime() + expiresIn * 1000);
+		return LocalDateTime.now().plusSeconds(expiresIn * 1000);
 	}
 
-	protected Boolean isCreatedBeforeLastPasswordReset(Date created, Date lastPasswordReset) {
-		return (lastPasswordReset != null && created.before(lastPasswordReset));
+	protected Boolean isCreatedBeforeLastPasswordReset(LocalDateTime created, LocalDateTime lastPasswordReset) {
+		return (lastPasswordReset != null && created.isBefore(lastPasswordReset));
 	}
 
 }

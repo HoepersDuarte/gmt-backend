@@ -15,6 +15,8 @@ import br.com.academiadev.reembolsoazul.dto.CompanyRegisterDTO;
 import br.com.academiadev.reembolsoazul.dto.CompanyViewDTO;
 import br.com.academiadev.reembolsoazul.service.CompanyService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -28,6 +30,9 @@ public class CompanyController {
 	private CompanyService companyService;
 
 	@ApiOperation(value = "Cadastra uma empresa")
+	@ApiImplicitParams({ //
+		@ApiImplicitParam(name = "Authorization", value = "Authorization token", required = true, dataType = "string", paramType = "header") //
+	})
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Empresa cadastrada com sucesso") })
 	@PostMapping("/")
 	public ResponseEntity<CompanyRegisterDTO> register(@RequestBody CompanyRegisterDTO companyRegisterDTO) {
@@ -36,6 +41,9 @@ public class CompanyController {
 	}
 
 	@ApiOperation(value = "Retorna todas as empresas cadastradas", response = CompanyViewDTO[].class)
+	@ApiImplicitParams({ //
+		@ApiImplicitParam(name = "Authorization", value = "Authorization token", required = true, dataType = "string", paramType = "header") //
+	})
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Lista recebida com sucesso") })
 	@GetMapping("/")
 	public ResponseEntity<List<CompanyViewDTO>> getAll() {
