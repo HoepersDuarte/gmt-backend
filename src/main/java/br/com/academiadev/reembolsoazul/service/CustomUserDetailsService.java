@@ -36,7 +36,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 		}
 	}
 
-	public void trocarSenha(String oldPassword, String newPassword) {
+	public void changePassword(String oldPassword, String newPassword) {
 		Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
 		String username = currentUser.getName();
 

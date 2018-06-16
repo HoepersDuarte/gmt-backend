@@ -12,7 +12,7 @@ import org.springframework.security.core.GrantedAuthority;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-@Table(name = "AUTORIZACAO")
+@Table(name = "AUTH")
 public class Authorization implements GrantedAuthority {
 
 	private static final long serialVersionUID = 1L;
@@ -22,22 +22,22 @@ public class Authorization implements GrantedAuthority {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(name = "nome")
-	private String nome;
+	@Column(name = "name")
+	private String name;
 
 	public Authorization(String name) {
 		super();
-		this.nome = name;
+		this.name = name;
 	}
 
 	@Override
 	public String getAuthority() {
-		return nome;
+		return name;
 	}
 
 	@JsonIgnore
-	public String getNome() {
-		return nome;
+	public String getName() {
+		return name;
 	}
 
 	@JsonIgnore
@@ -53,14 +53,14 @@ public class Authorization implements GrantedAuthority {
 		this.id = id;
 	}
 
-	public void setNome(String nome) {
-		this.nome = nome;
+	public void setName(String name) {
+		this.name = name;
 	}
 
-	public Authorization(Long id, String nome) {
+	public Authorization(Long id, String name) {
 		super();
 		this.id = id;
-		this.nome = nome;
+		this.name = name;
 	}
 
 	public Authorization() {

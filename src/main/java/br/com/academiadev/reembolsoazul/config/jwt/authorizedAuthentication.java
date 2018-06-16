@@ -3,15 +3,15 @@ package br.com.academiadev.reembolsoazul.config.jwt;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 
-public class AutenticacaoAutorizada extends AbstractAuthenticationToken {
+public class authorizedAuthentication extends AbstractAuthenticationToken {
 
 	private static final long serialVersionUID = 1L;
 	private String token;
-	private final UserDetails usuario;
+	private final UserDetails user;
 
-	public AutenticacaoAutorizada(UserDetails principle, String token) {
+	public authorizedAuthentication(UserDetails principle, String token) {
 		super(principle.getAuthorities());
-		this.usuario = principle;
+		this.user = principle;
 		this.token = token;
 	}
 
@@ -35,7 +35,7 @@ public class AutenticacaoAutorizada extends AbstractAuthenticationToken {
 
 	@Override
 	public UserDetails getPrincipal() {
-		return usuario;
+		return user;
 	}
 
 }

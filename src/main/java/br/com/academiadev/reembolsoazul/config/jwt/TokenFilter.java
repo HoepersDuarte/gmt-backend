@@ -28,11 +28,11 @@ public class TokenFilter extends OncePerRequestFilter {
 			throws IOException, ServletException {
 		String token = tokenHelper.getToken(request);
 		if (token != null) {
-			String usuarioDoToken = tokenHelper.getUser(token);
-			if (usuarioDoToken != null) {
-				UserDetails usuario = userDetailsService.loadUserByUsername(usuarioDoToken);
-				if (tokenHelper.validateToken(token, usuario)) {
-					SecurityContextHolder.getContext().setAuthentication(new AutenticacaoAutorizada(usuario, token));
+			String userToken = tokenHelper.getUser(token);
+			if (userToken != null) {
+				UserDetails user = userDetailsService.loadUserByUsername(userToken);
+				if (tokenHelper.validateToken(token, user)) {
+					SecurityContextHolder.getContext().setAuthentication(new authorizedAuthentication(user, token));
 				}
 			}
 		}

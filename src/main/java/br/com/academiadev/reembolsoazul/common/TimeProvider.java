@@ -13,11 +13,11 @@ public class TimeProvider implements Serializable {
 
 	private static final long serialVersionUID = -3301695478208950415L;
 
-	public LocalDateTime getDataHoraAtual() {
+	public LocalDateTime getActualDateTime() {
 		return LocalDateTime.now();
 	}
 
-	public LocalDate getDataAtual() {
+	public LocalDate getActualDate() {
 		return LocalDate.now();
 	}
 

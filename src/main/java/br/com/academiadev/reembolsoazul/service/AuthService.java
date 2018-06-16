@@ -13,7 +13,7 @@ public class AuthService {
 	private AuthorizationRepository authorizationRepository;
 
 	public Authorization findByNome(String nome) {
-		return authorizationRepository.findByNome(nome);
+		return authorizationRepository.findByName(nome);
 	}
 
 }

@@ -1,6 +1,6 @@
 package br.com.academiadev.reembolsoazul.config.jwt;
 
-public enum TipoDispositivo {
+public enum DeviceType {
 
 	AUDIENCE_UNKNOWN("unknown"), //
 	AUDIENCE_WEB("web"), //
@@ -9,7 +9,7 @@ public enum TipoDispositivo {
 
 	private String id;
 
-	private TipoDispositivo(String id) {
+	private DeviceType(String id) {
 		this.id = id;
 	}
 

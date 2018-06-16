@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import br.com.academiadev.reembolsoazul.converter.UserRegisterConverter;
@@ -35,11 +36,15 @@ public class UserService {
 
 	@Autowired
 	private CompanyRepository companyRepository;
+	
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 
 	public void save(UserRegisterDTO userRegisterDTO) throws CompanyNotFoundException {
 		User user = userRegisterConverter.toEntity(userRegisterDTO);
 
 		getUserTypeAndCompany(user, userRegisterDTO.getCompanyCode());
+		user.setPassword(passwordEncoder.encode(userRegisterDTO.getPassword()));
 		user.setLastPasswordChange(LocalDateTime.now());
 
 		userRepository.save(user);

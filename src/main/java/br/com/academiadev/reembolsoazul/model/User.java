@@ -16,7 +16,7 @@ import javax.persistence.Table;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-@Table(name = "userI") // postgre n deixa criar a table user
+@Table(name = "USERI") // postgre n deixa criar a table user
 @Entity
 public class User implements UserDetails {
 	private static final long serialVersionUID = 1L;

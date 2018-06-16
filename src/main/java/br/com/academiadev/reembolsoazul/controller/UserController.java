@@ -41,6 +41,9 @@ public class UserController {
 
 	@ApiOperation(value = "Retorna todos os usuarios cadastrados", response = UserRegisterDTO[].class)
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Lista recebida com sucesso") })
+	@ApiImplicitParams({ //
+		@ApiImplicitParam(name = "Authorization", value = "Authorization token", required = true, dataType = "string", paramType = "header") //
+	})
 	@GetMapping("/")
 	public ResponseEntity<List<UserViewDTO>> getAll() {
 		return new ResponseEntity<>(userService.findAll(), HttpStatus.OK);

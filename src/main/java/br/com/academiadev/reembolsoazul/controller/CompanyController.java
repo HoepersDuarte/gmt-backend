@@ -39,6 +39,9 @@ public class CompanyController {
 
 	@ApiOperation(value = "Retorna todas as empresas cadastradas", response = CompanyViewDTO[].class)
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Lista recebida com sucesso") })
+	@ApiImplicitParams({ //
+		@ApiImplicitParam(name = "Authorization", value = "Authorization token", required = true, dataType = "string", paramType = "header") //
+	})
 	@GetMapping("/")
 	public ResponseEntity<List<CompanyViewDTO>> getAll() {
 		return new ResponseEntity<>(companyService.findAll(), HttpStatus.OK);

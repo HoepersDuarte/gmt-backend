@@ -28,7 +28,7 @@ import br.com.academiadev.reembolsoazul.common.DeviceProvider;
 import br.com.academiadev.reembolsoazul.config.jwt.TokenHelper;
 import br.com.academiadev.reembolsoazul.dto.ChangePasswordDTO;
 import br.com.academiadev.reembolsoazul.dto.LoginDTO;
-import br.com.academiadev.reembolsoazul.model.TokenDTO;
+import br.com.academiadev.reembolsoazul.dto.TokenDTO;
 import br.com.academiadev.reembolsoazul.model.User;
 import br.com.academiadev.reembolsoazul.service.CustomUserDetailsService;
 import io.swagger.annotations.ApiImplicitParam;
@@ -52,24 +52,24 @@ public class AuthController {
 
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public ResponseEntity<?> login(@RequestBody LoginDTO authenticationRequest, HttpServletResponse response,
-			Device dispositivo) throws AuthenticationException, IOException {
-		final Authentication autenticacao = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+			Device device) throws AuthenticationException, IOException {
+		final Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
 				authenticationRequest.getEmail(), authenticationRequest.getPassword()));
-		SecurityContextHolder.getContext().setAuthentication(autenticacao);
-		User usuario = (User) autenticacao.getPrincipal();
-		String token = tokenHelper.generateToken(usuario.getUsername(), dispositivo);
-		int expiresIn = tokenHelper.getExpiredIn(dispositivo);
+		SecurityContextHolder.getContext().setAuthentication(authentication);
+		User user = (User) authentication.getPrincipal();
+		String token = tokenHelper.generateToken(user.getUsername(), device);
+		int expiresIn = tokenHelper.getExpiredIn(device);
 		return ResponseEntity.ok(new TokenDTO(token, Long.valueOf(expiresIn)));
 	}
 
 	@RequestMapping(value = "/refresh", method = RequestMethod.POST)
 	public ResponseEntity<?> refresh(HttpServletRequest request, HttpServletResponse response, Principal principal) {
 		String token = tokenHelper.getToken(request);
-		Device dispositivo = deviceProvider.getDispositivo(request);
+		Device device = deviceProvider.getDispositivo(request);
 		if (token != null && principal != null) {
-			String tokenAtualizado = tokenHelper.updateToken(token, dispositivo);
-			int expiracao = tokenHelper.getExpiredIn(dispositivo);
-			return ResponseEntity.ok(new TokenDTO(tokenAtualizado, Long.valueOf(expiracao)));
+			String updatedToken = tokenHelper.updateToken(token, device);
+			int expiredIn = tokenHelper.getExpiredIn(device);
+			return ResponseEntity.ok(new TokenDTO(updatedToken, Long.valueOf(expiredIn)));
 		} else {
 			TokenDTO tokenDTO = new TokenDTO();
 			return ResponseEntity.accepted().body(tokenDTO);
@@ -84,10 +84,10 @@ public class AuthController {
 		String token = tokenHelper.getToken(request);
 
 		if (token != null) {
-			String usuarioDoToken = tokenHelper.getUser(token);
-			if (usuarioDoToken != null) {
-				UserDetails usuario = userDetailsService.loadUserByUsername(usuarioDoToken);
-				if (tokenHelper.validateToken(token, usuario)) {
+			String userToken = tokenHelper.getUser(token);
+			if (userToken != null) {
+				UserDetails user = userDetailsService.loadUserByUsername(userToken);
+				if (tokenHelper.validateToken(token, user)) {
 					Map<String, String> result = new HashMap<>();
 					result.put("isAuth", "true");
 					return ResponseEntity.ok().body(result);
@@ -102,8 +102,8 @@ public class AuthController {
 
 	@RequestMapping(value = "/change-password", method = RequestMethod.POST)
 	// @PreAuthorize("hasRole('USER')")
-	public ResponseEntity<?> trocarSenha(@RequestBody ChangePasswordDTO trocaSenhaDTO) {
-		userDetailsService.trocarSenha(trocaSenhaDTO.oldPassword, trocaSenhaDTO.newPassword);
+	public ResponseEntity<?> changePassword(@RequestBody ChangePasswordDTO changePasswordDTO) {
+		userDetailsService.changePassword(changePasswordDTO.oldPassword, changePasswordDTO.newPassword);
 		Map<String, String> result = new HashMap<>();
 		result.put("result", "success");
 		return ResponseEntity.accepted().body(result);

@@ -38,13 +38,13 @@ public class AbstractTokenHelper {
 	}
 
 	protected String generateAudience(Device device) {
-		TipoDispositivo audience = TipoDispositivo.AUDIENCE_UNKNOWN;
+		DeviceType audience = DeviceType.AUDIENCE_UNKNOWN;
 		if (device.isNormal()) {
-			audience = TipoDispositivo.AUDIENCE_WEB;
+			audience = DeviceType.AUDIENCE_WEB;
 		} else if (device.isTablet()) {
-			audience = TipoDispositivo.AUDIENCE_TABLET;
+			audience = DeviceType.AUDIENCE_TABLET;
 		} else if (device.isMobile()) {
-			audience = TipoDispositivo.AUDIENCE_MOBILE;
+			audience = DeviceType.AUDIENCE_MOBILE;
 		}
 		return audience.getId();
 	}

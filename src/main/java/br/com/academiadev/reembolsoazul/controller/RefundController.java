@@ -30,9 +30,6 @@ public class RefundController {
 	private RefundService refundService;
 
 	@ApiOperation(value = "Cadastra um reembolso")
-	@ApiImplicitParams({ //
-			@ApiImplicitParam(name = "Authorization", value = "Authorization token", required = true, dataType = "string", paramType = "header") //
-	})
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Reembolso cadastrado com sucesso") })
 	@PostMapping("/")
 	public ResponseEntity<RefundDTO> register(@RequestBody RefundDTO refundDTO) throws UserNotFoundException {

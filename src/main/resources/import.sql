@@ -1,5 +1,5 @@
-INSERT INTO AUTORIZACAO (id, nome) VALUES (1, 'ROLE_USER');
-INSERT INTO AUTORIZACAO (id, nome) VALUES (2, 'ROLE_ADMIN');
+INSERT INTO AUTH (id, name) VALUES (1, 'ROLE_USER');
+INSERT INTO AUTH (id, name) VALUES (2, 'ROLE_ADMIN');
 
 INSERT INTO COMPANY (id, company_admin_code, company_user_code, name) VALUES (10, 'admin-code', 'user-code', 'Company name');
 

@@ -63,7 +63,7 @@ public class TokenHelper extends AbstractTokenHelper {
 		String updatedToken;
 		try {
 			Claims claims = this.getAllClaimsFromToken(token);
-			claims.setIssuedAt(timeProvider.toDate(timeProvider.getDataHoraAtual()));
+			claims.setIssuedAt(timeProvider.toDate(timeProvider.getActualDateTime()));
 			updatedToken = Jwts.builder().setClaims(claims)
 					.setExpiration(timeProvider.toDate(generateExpirationDate(device)))
 					.signWith(SIGNATURE_ALGORITHM, SECRET).compact();
@@ -76,7 +76,7 @@ public class TokenHelper extends AbstractTokenHelper {
 	public String generateToken(String username, Device device) {
 		String audience = generateAudience(device);
 		return Jwts.builder().setIssuer(APP_NAME).setSubject(username).setHeaderParam("email", "docsbruno@gmail.com")
-				.setAudience(audience).setIssuedAt(timeProvider.toDate(timeProvider.getDataHoraAtual()))
+				.setAudience(audience).setIssuedAt(timeProvider.toDate(timeProvider.getActualDateTime()))
 				.setExpiration(timeProvider.toDate(generateExpirationDate(device)))
 				.signWith(SIGNATURE_ALGORITHM, SECRET).compact();
 	}
@@ -92,7 +92,7 @@ public class TokenHelper extends AbstractTokenHelper {
 		Boolean foiCriadoAntesDaUltimaTrocaDeSenha = isCreatedBeforeLastPasswordReset(dataDeCriacao,
 				user.getLastPasswordChange());
 		boolean ehMesmoUsuario = userToken != null && userToken.equals(userDetails.getUsername());
-		boolean estaEspirado = getExpirationDate(token).compareTo(timeProvider.getDataHoraAtual()) <= 0;
+		boolean estaEspirado = getExpirationDate(token).compareTo(timeProvider.getActualDateTime()) <= 0;
 		return (ehMesmoUsuario && !foiCriadoAntesDaUltimaTrocaDeSenha && !estaEspirado);
 	}
 
