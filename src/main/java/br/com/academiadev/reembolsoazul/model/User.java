@@ -1,6 +1,5 @@
 package br.com.academiadev.reembolsoazul.model;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Collection;
 

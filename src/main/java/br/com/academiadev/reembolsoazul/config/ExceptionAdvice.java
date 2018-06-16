@@ -18,6 +18,7 @@ import br.com.academiadev.reembolsoazul.exception.APIException;
 
 public class ExceptionAdvice {
 	private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ExceptionAdvice.class);
+
 	@ExceptionHandler(value = Throwable.class)
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 	@ResponseBody
@@ -29,7 +30,8 @@ public class ExceptionAdvice {
 	@ExceptionHandler(value = NoResultException.class)
 	@ResponseStatus(HttpStatus.NOT_FOUND)
 	@ResponseBody
-	public ResponseEntity<Map<String, Object>> handleNoResultException(final Exception exception, final WebRequest request) {
+	public ResponseEntity<Map<String, Object>> handleNoResultException(final Exception exception,
+			final WebRequest request) {
 		log.error(exception.getMessage(), exception);
 		return getDefaultErrorResponse(exception.getMessage(), HttpStatus.NOT_FOUND);
 	}
@@ -37,7 +39,8 @@ public class ExceptionAdvice {
 	@ExceptionHandler(value = AccessDeniedException.class)
 	@ResponseStatus(HttpStatus.UNAUTHORIZED)
 	@ResponseBody
-	public ResponseEntity<Map<String, Object>> handleAccessControlException(final Exception exception, final WebRequest request) {
+	public ResponseEntity<Map<String, Object>> handleAccessControlException(final Exception exception,
+			final WebRequest request) {
 		log.error(exception.getMessage(), exception);
 		return getDefaultErrorResponse(exception.getMessage(), HttpStatus.UNAUTHORIZED);
 	}
@@ -45,12 +48,14 @@ public class ExceptionAdvice {
 	@ExceptionHandler(value = APIException.class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ResponseBody
-	public ResponseEntity<Map<String, Object>> handleNgAlertException(final APIException exception, final WebRequest request) {
+	public ResponseEntity<Map<String, Object>> handleNgAlertException(final APIException exception,
+			final WebRequest request) {
 		log.error(exception.getMessage(), exception);
 		return getApiAlertMessage(exception.getMessage(), exception.getErrorKey(), HttpStatus.BAD_REQUEST);
 	}
 
-	private ResponseEntity<Map<String, Object>> getApiAlertMessage(final String message, String errorKey, final HttpStatus httpStatus) {
+	private ResponseEntity<Map<String, Object>> getApiAlertMessage(final String message, String errorKey,
+			final HttpStatus httpStatus) {
 		final Map<String, Object> errorMap = getMessageErrorMap(message, errorKey, httpStatus);
 		return new ResponseEntity<>(errorMap, httpStatus);
 	}
@@ -61,7 +66,7 @@ public class ExceptionAdvice {
 		map.put("status", httpStatus.value());
 		map.put("message", message);
 		map.put("errorKey", errorKey);
-		
+
 		Map<String, Object> formReativo = new HashMap<>();
 		formReativo.put("usuarioUnico", true);
 		formReativo.put("senhaInvalida", true);
@@ -69,8 +74,10 @@ public class ExceptionAdvice {
 		return map;
 	}
 
-	private ResponseEntity<Map<String, Object>> getDefaultErrorResponse(final String message, final HttpStatus httpStatus) {
-		final Map<String, Object> errorMap = getMessageErrorMap(message, "label_error_" + httpStatus.value(), httpStatus);
+	private ResponseEntity<Map<String, Object>> getDefaultErrorResponse(final String message,
+			final HttpStatus httpStatus) {
+		final Map<String, Object> errorMap = getMessageErrorMap(message, "label_error_" + httpStatus.value(),
+				httpStatus);
 		return new ResponseEntity<>(errorMap, httpStatus);
 	}
 }

@@ -10,10 +10,10 @@ import br.com.academiadev.reembolsoazul.model.User;
 
 @Component
 public class UserRegisterConverter implements Converter<User, UserRegisterDTO> {
-	
+
 	@Autowired
 	private PasswordEncoder passwordEncoder;
-	
+
 	@Override
 	public UserRegisterDTO toDTO(User entity) {
 		throw new NotYetImplementedException();

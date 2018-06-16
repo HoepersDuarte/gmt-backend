@@ -62,6 +62,7 @@ public class Authorization implements GrantedAuthority {
 		this.id = id;
 		this.nome = nome;
 	}
+
 	public Authorization() {
 	}
 

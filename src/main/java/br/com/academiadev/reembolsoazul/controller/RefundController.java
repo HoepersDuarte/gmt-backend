@@ -31,7 +31,7 @@ public class RefundController {
 
 	@ApiOperation(value = "Cadastra um reembolso")
 	@ApiImplicitParams({ //
-		@ApiImplicitParam(name = "Authorization", value = "Authorization token", required = true, dataType = "string", paramType = "header") //
+			@ApiImplicitParam(name = "Authorization", value = "Authorization token", required = true, dataType = "string", paramType = "header") //
 	})
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Reembolso cadastrado com sucesso") })
 	@PostMapping("/")
@@ -42,7 +42,7 @@ public class RefundController {
 
 	@ApiOperation(value = "Retorna todos os reembolsos cadastrados", response = RefundDTO[].class)
 	@ApiImplicitParams({ //
-		@ApiImplicitParam(name = "Authorization", value = "Authorization token", required = true, dataType = "string", paramType = "header") //
+			@ApiImplicitParam(name = "Authorization", value = "Authorization token", required = true, dataType = "string", paramType = "header") //
 	})
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Lista recebida com sucesso") })
 	@GetMapping("/")

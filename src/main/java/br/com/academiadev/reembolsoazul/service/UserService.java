@@ -42,15 +42,15 @@ public class UserService {
 
 		userRepository.save(user);
 	}
-	
+
 	public User findById(Long id) throws AccessDeniedException {
 		return userRepository.findOne(id);
 	}
-	
+
 	public User findByUsername(String email) throws UsernameNotFoundException {
 		return this.findByEmail(email);
 	}
-	
+
 	public User findByEmail(String email) throws UsernameNotFoundException {
 		return userRepository.findByEmail(email);
 	}
@@ -81,8 +81,5 @@ public class UserService {
 
 		throw new CompanyNotFoundException();
 	}
-	
-	
-	
 
 }

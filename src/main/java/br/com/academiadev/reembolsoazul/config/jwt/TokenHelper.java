@@ -1,7 +1,6 @@
 package br.com.academiadev.reembolsoazul.config.jwt;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -90,7 +89,8 @@ public class TokenHelper extends AbstractTokenHelper {
 		User user = (User) userDetails;
 		final String userToken = getUser(token);
 		final LocalDateTime dataDeCriacao = getCreationDate(token);
-		Boolean foiCriadoAntesDaUltimaTrocaDeSenha = isCreatedBeforeLastPasswordReset(dataDeCriacao, user.getLastPasswordChange());
+		Boolean foiCriadoAntesDaUltimaTrocaDeSenha = isCreatedBeforeLastPasswordReset(dataDeCriacao,
+				user.getLastPasswordChange());
 		boolean ehMesmoUsuario = userToken != null && userToken.equals(userDetails.getUsername());
 		boolean estaEspirado = getExpirationDate(token).compareTo(timeProvider.getDataHoraAtual()) <= 0;
 		return (ehMesmoUsuario && !foiCriadoAntesDaUltimaTrocaDeSenha && !estaEspirado);

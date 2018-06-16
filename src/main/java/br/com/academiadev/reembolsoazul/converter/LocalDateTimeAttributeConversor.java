@@ -20,4 +20,3 @@ public class LocalDateTimeAttributeConversor implements AttributeConverter<Local
 	}
 
 }
-

@@ -12,14 +12,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mobile.device.Device;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -53,8 +51,10 @@ public class AuthController {
 	private DeviceProvider deviceProvider;
 
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
-	public ResponseEntity<?> login(@RequestBody LoginDTO authenticationRequest, HttpServletResponse response, Device dispositivo) throws AuthenticationException, IOException {
-		final Authentication autenticacao = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authenticationRequest.getEmail(), authenticationRequest.getPassword()));
+	public ResponseEntity<?> login(@RequestBody LoginDTO authenticationRequest, HttpServletResponse response,
+			Device dispositivo) throws AuthenticationException, IOException {
+		final Authentication autenticacao = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+				authenticationRequest.getEmail(), authenticationRequest.getPassword()));
 		SecurityContextHolder.getContext().setAuthentication(autenticacao);
 		User usuario = (User) autenticacao.getPrincipal();
 		String token = tokenHelper.generateToken(usuario.getUsername(), dispositivo);
@@ -76,11 +76,10 @@ public class AuthController {
 		}
 	}
 
-	
 	@RequestMapping(value = "/isauth", method = RequestMethod.POST)
 	@ApiImplicitParams({ //
-		@ApiImplicitParam(name = "Authorization", value = "Authorization token", required = true, dataType = "string", paramType = "header") //
-})
+			@ApiImplicitParam(name = "Authorization", value = "Authorization token", required = true, dataType = "string", paramType = "header") //
+	})
 	public ResponseEntity<?> isAuth(HttpServletRequest request) {
 		String token = tokenHelper.getToken(request);
 
@@ -102,7 +101,7 @@ public class AuthController {
 	}
 
 	@RequestMapping(value = "/change-password", method = RequestMethod.POST)
-	//@PreAuthorize("hasRole('USER')")
+	// @PreAuthorize("hasRole('USER')")
 	public ResponseEntity<?> trocarSenha(@RequestBody ChangePasswordDTO trocaSenhaDTO) {
 		userDetailsService.trocarSenha(trocaSenhaDTO.oldPassword, trocaSenhaDTO.newPassword);
 		Map<String, String> result = new HashMap<>();
