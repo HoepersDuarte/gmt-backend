@@ -1,0 +1,14 @@
+app:
+  name: ms-auth
+spring:
+  application:
+    name: ms-auth
+  jpa:
+    generate-ddl: true
+server:
+  port: ${PORT}
+jwt:
+  secret: ${SECRET}
+management:
+  security:
+    enable: false
