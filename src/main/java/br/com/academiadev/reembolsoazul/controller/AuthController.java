@@ -63,9 +63,12 @@ public class AuthController {
 	}
 
 	@RequestMapping(value = "/refresh", method = RequestMethod.POST)
+	@ApiImplicitParams({ //
+		@ApiImplicitParam(name = "Authorization", value = "Authorization token", required = true, dataType = "string", paramType = "header") //
+	})
 	public ResponseEntity<?> refresh(HttpServletRequest request, HttpServletResponse response, Principal principal) {
 		String token = tokenHelper.getToken(request);
-		Device device = deviceProvider.getDispositivo(request);
+		Device device = deviceProvider.getDevice(request);
 		if (token != null && principal != null) {
 			String updatedToken = tokenHelper.updateToken(token, device);
 			int expiredIn = tokenHelper.getExpiredIn(device);
@@ -101,6 +104,9 @@ public class AuthController {
 	}
 
 	@RequestMapping(value = "/change-password", method = RequestMethod.POST)
+	@ApiImplicitParams({ //
+		@ApiImplicitParam(name = "Authorization", value = "Authorization token", required = true, dataType = "string", paramType = "header") //
+	})
 	// @PreAuthorize("hasRole('USER')")
 	public ResponseEntity<?> changePassword(@RequestBody ChangePasswordDTO changePasswordDTO) {
 		userDetailsService.changePassword(changePasswordDTO.oldPassword, changePasswordDTO.newPassword);

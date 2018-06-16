@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class DeviceProvider {
 
-	public Device getDispositivo(HttpServletRequest request) {
+	public Device getDevice(HttpServletRequest request) {
 		return DeviceUtils.getCurrentDevice(request);
 	}
 }
