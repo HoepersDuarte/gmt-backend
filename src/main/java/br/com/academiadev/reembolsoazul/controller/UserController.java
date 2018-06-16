@@ -16,6 +16,8 @@ import br.com.academiadev.reembolsoazul.dto.UserViewDTO;
 import br.com.academiadev.reembolsoazul.exception.CompanyNotFoundException;
 import br.com.academiadev.reembolsoazul.service.UserService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -33,12 +35,15 @@ public class UserController {
 	@PostMapping("/")
 	public ResponseEntity<UserRegisterDTO> register(@RequestBody UserRegisterDTO userRegisterDTO)
 			throws CompanyNotFoundException {
-		userService.register(userRegisterDTO);
+		userService.save(userRegisterDTO);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 	@ApiOperation(value = "Retorna todos os usuarios cadastrados", response = UserRegisterDTO[].class)
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Lista recebida com sucesso") })
+	@ApiImplicitParams({ //
+		@ApiImplicitParam(name = "Authorization", value = "Authorization token", required = true, dataType = "string", paramType = "header") //
+	})
 	@GetMapping("/")
 	public ResponseEntity<List<UserViewDTO>> getAll() {
 		return new ResponseEntity<>(userService.findAll(), HttpStatus.OK);

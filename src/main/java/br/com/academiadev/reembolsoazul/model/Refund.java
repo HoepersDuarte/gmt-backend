@@ -14,7 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-@Table(name = "refund")
+@Table(name = "REFUND")
 @Entity
 public class Refund implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -36,7 +36,7 @@ public class Refund implements Serializable {
 	@Column
 	private String file;// TODO como armazena arquivos de nota fiscal
 
-	@OneToOne // TODO ver como e o mapeamento
+	@OneToOne
 	private User user;
 
 	@Enumerated(EnumType.ORDINAL)

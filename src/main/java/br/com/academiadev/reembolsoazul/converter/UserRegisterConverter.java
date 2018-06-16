@@ -1,6 +1,8 @@
 package br.com.academiadev.reembolsoazul.converter;
 
 import org.hibernate.cfg.NotYetImplementedException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import br.com.academiadev.reembolsoazul.dto.UserRegisterDTO;
@@ -19,7 +21,6 @@ public class UserRegisterConverter implements Converter<User, UserRegisterDTO> {
 		User user = new User();
 		user.setName(dto.getName());
 		user.setEmail(dto.getEmail());
-		user.setPassword(dto.getPassword());
 		return user;
 	}
 

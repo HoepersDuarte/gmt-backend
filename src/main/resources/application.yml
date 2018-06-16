@@ -1,0 +1,27 @@
+app:
+  name: reembolsoazul
+spring:
+  application:
+    name: reembolsoazul
+  datasource:
+    url: jdbc:postgresql://localhost/reembolsoazul
+    username: postgres
+    password: passdb
+  jpa:
+    generate-ddl: true
+    hibernate:
+        ddl-auto : create
+  profiles:
+    active: dev
+server:
+  port: ${PORT:8082}
+jwt:
+  header: Authorization
+  expires_in: 3000
+  mobile_expires_in: 3000
+  secret: ACADEMIADEV
+  pass_secret: ACADDEV
+management:
+  security:
+    enabled: false
+  contextPath: /management

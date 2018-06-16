@@ -15,6 +15,8 @@ import br.com.academiadev.reembolsoazul.dto.RefundDTO;
 import br.com.academiadev.reembolsoazul.exception.UserNotFoundException;
 import br.com.academiadev.reembolsoazul.service.RefundService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -36,6 +38,9 @@ public class RefundController {
 	}
 
 	@ApiOperation(value = "Retorna todos os reembolsos cadastrados", response = RefundDTO[].class)
+	@ApiImplicitParams({ //
+			@ApiImplicitParam(name = "Authorization", value = "Authorization token", required = true, dataType = "string", paramType = "header") //
+	})
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Lista recebida com sucesso") })
 	@GetMapping("/")
 	public ResponseEntity<List<RefundDTO>> getAll() {
