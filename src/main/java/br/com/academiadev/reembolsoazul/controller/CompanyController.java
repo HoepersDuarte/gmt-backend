@@ -30,9 +30,6 @@ public class CompanyController {
 	private CompanyService companyService;
 
 	@ApiOperation(value = "Cadastra uma empresa")
-	@ApiImplicitParams({ //
-			@ApiImplicitParam(name = "Authorization", value = "Authorization token", required = true, dataType = "string", paramType = "header") //
-	})
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Empresa cadastrada com sucesso") })
 	@PostMapping("/")
 	public ResponseEntity<CompanyRegisterDTO> register(@RequestBody CompanyRegisterDTO companyRegisterDTO) {
@@ -41,9 +38,6 @@ public class CompanyController {
 	}
 
 	@ApiOperation(value = "Retorna todas as empresas cadastradas", response = CompanyViewDTO[].class)
-	@ApiImplicitParams({ //
-			@ApiImplicitParam(name = "Authorization", value = "Authorization token", required = true, dataType = "string", paramType = "header") //
-	})
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Lista recebida com sucesso") })
 	@GetMapping("/")
 	public ResponseEntity<List<CompanyViewDTO>> getAll() {

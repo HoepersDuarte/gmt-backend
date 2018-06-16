@@ -1,5 +1,6 @@
 package br.com.academiadev.reembolsoazul.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,6 +40,7 @@ public class UserService {
 		User user = userRegisterConverter.toEntity(userRegisterDTO);
 
 		getUserTypeAndCompany(user, userRegisterDTO.getCompanyCode());
+		user.setLastPasswordChange(LocalDateTime.now());
 
 		userRepository.save(user);
 	}

@@ -31,9 +31,6 @@ public class UserController {
 	private UserService userService;
 
 	@ApiOperation(value = "Cadastra um usuario")
-	@ApiImplicitParams({ //
-			@ApiImplicitParam(name = "Authorization", value = "Authorization token", required = true, dataType = "string", paramType = "header") //
-	})
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Usuario cadastrado com sucesso") })
 	@PostMapping("/")
 	public ResponseEntity<UserRegisterDTO> register(@RequestBody UserRegisterDTO userRegisterDTO)
@@ -43,9 +40,6 @@ public class UserController {
 	}
 
 	@ApiOperation(value = "Retorna todos os usuarios cadastrados", response = UserRegisterDTO[].class)
-	@ApiImplicitParams({ //
-			@ApiImplicitParam(name = "Authorization", value = "Authorization token", required = true, dataType = "string", paramType = "header") //
-	})
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Lista recebida com sucesso") })
 	@GetMapping("/")
 	public ResponseEntity<List<UserViewDTO>> getAll() {
