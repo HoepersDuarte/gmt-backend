@@ -88,11 +88,10 @@ public class TokenHelper extends AbstractTokenHelper {
 
 	public Boolean validateToken(String token, UserDetails userDetails) {
 		User user = (User) userDetails;
-		final String username = getUser(token);
-		final LocalDateTime creationDate = getCreationDate(token);
-		Boolean foiCriadoAntesDaUltimaTrocaDeSenha = isCreatedBeforeLastPasswordReset(creationDate,
-				user.getLastPasswordChange());
-		boolean ehMesmoUsuario = user != null && user.equals(userDetails.getUsername());
+		final String userToken = getUser(token);
+		final LocalDateTime dataDeCriacao = getCreationDate(token);
+		Boolean foiCriadoAntesDaUltimaTrocaDeSenha = isCreatedBeforeLastPasswordReset(dataDeCriacao, user.getLastPasswordChange());
+		boolean ehMesmoUsuario = userToken != null && userToken.equals(userDetails.getUsername());
 		boolean estaEspirado = getExpirationDate(token).compareTo(timeProvider.getDataHoraAtual()) <= 0;
 		return (ehMesmoUsuario && !foiCriadoAntesDaUltimaTrocaDeSenha && !estaEspirado);
 	}

@@ -102,7 +102,7 @@ public class AuthController {
 	}
 
 	@RequestMapping(value = "/change-password", method = RequestMethod.POST)
-	@PreAuthorize("hasRole('USER')")
+	//@PreAuthorize("hasRole('USER')")
 	public ResponseEntity<?> trocarSenha(@RequestBody ChangePasswordDTO trocaSenhaDTO) {
 		userDetailsService.trocarSenha(trocaSenhaDTO.oldPassword, trocaSenhaDTO.newPassword);
 		Map<String, String> result = new HashMap<>();
