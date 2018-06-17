@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -44,6 +45,7 @@ public class UserController {
 	@ApiImplicitParams({ //
 		@ApiImplicitParam(name = "Authorization", value = "Authorization token", required = true, dataType = "string", paramType = "header") //
 	})
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@GetMapping("/")
 	public ResponseEntity<List<UserViewDTO>> getAll() {
 		return new ResponseEntity<>(userService.findAll(), HttpStatus.OK);

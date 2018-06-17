@@ -120,7 +120,7 @@ public class ReembolsoazulApplicationTests {
 		User user = ((List<User>) userRepository.findAll()).get(0);
 
 		Assert.assertTrue(user.getName().equals("name1") && user.getEmail().equals("email1")
-				&& user.getPassword().equals("password1") && user.getUserType().equals(UserType.ADMIN)
+				&& user.getPassword().equals("password1") && user.getUserType().equals(UserType.ROLE_ADMIN)
 				&& user.getCompany().getName().equals("Empresa 1"));
 	}
 
@@ -179,11 +179,11 @@ public class ReembolsoazulApplicationTests {
 	@Test
 	public void companyCodeGeneration() {
 		String companyName = "Empresa 1";
-		UserType userType = UserType.ADMIN;
+		UserType userType = UserType.ROLE_ADMIN;
 		String hash1 = CompanyTokenHelper.generateToken(companyName, userType);
 
 		companyName = "Empresa 2";
-		userType = UserType.COMMONUSER;
+		userType = UserType.ROLE_COMMONUSER;
 		String hash2 = CompanyTokenHelper.generateToken(companyName, userType);
 
 		Assert.assertTrue(!hash1.equals(hash2));

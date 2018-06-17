@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -31,6 +32,10 @@ public class RefundController {
 
 	@ApiOperation(value = "Cadastra um reembolso")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Reembolso cadastrado com sucesso") })
+	@ApiImplicitParams({ //
+		@ApiImplicitParam(name = "Authorization", value = "Authorization token", required = true, dataType = "string", paramType = "header") //
+	})
+	@PreAuthorize("hasRole('ROLE_COMMONUSER')")
 	@PostMapping("/")
 	public ResponseEntity<RefundDTO> register(@RequestBody RefundDTO refundDTO) throws UserNotFoundException {
 		refundService.register(refundDTO);
@@ -42,6 +47,7 @@ public class RefundController {
 			@ApiImplicitParam(name = "Authorization", value = "Authorization token", required = true, dataType = "string", paramType = "header") //
 	})
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Lista recebida com sucesso") })
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@GetMapping("/")
 	public ResponseEntity<List<RefundDTO>> getAll() {
 		return new ResponseEntity<>(refundService.findAll(), HttpStatus.OK);

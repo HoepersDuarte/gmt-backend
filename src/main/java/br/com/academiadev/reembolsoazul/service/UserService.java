@@ -74,7 +74,7 @@ public class UserService {
 		List<Company> companies = companyRepository.findByCompanyAdminCode(companyCode);
 		if (companies.size() == 1) {
 			user.setCompany(companies.get(0));
-			user.setUserType(UserType.ADMIN);
+			user.setUserType(UserType.ROLE_ADMIN);
 			return;
 		}
 
@@ -82,7 +82,7 @@ public class UserService {
 		companies = companyRepository.findByCompanyUserCode(companyCode);
 		if (companies.size() == 1) {
 			user.setCompany(companies.get(0));
-			user.setUserType(UserType.COMMONUSER);
+			user.setUserType(UserType.ROLE_COMMONUSER);
 			return;
 		}
 
