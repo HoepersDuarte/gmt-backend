@@ -1,6 +1,7 @@
 package br.com.academiadev.reembolsoazul.model;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.persistence.Column;
@@ -107,8 +108,9 @@ public class User implements UserDetails {
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		// TODO Auto-generated method stub
-		return null;
+		ArrayList<GrantedAuthority> list = new ArrayList<GrantedAuthority>();
+		list.add(this.getUserType());	
+		return list;
 	}
 
 	@Override

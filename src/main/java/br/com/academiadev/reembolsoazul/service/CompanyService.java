@@ -40,17 +40,17 @@ public class CompanyService {
 	}
 
 	private void setAdminAndUserCodes(String companyName, Company company) {
-		company.setCompanyAdminCode(CompanyTokenHelper.generateToken(companyName, UserType.ADMIN));
+		company.setCompanyAdminCode(CompanyTokenHelper.generateToken(companyName, UserType.ROLE_ADMIN));
 		List<Company> companies = companyRepository.findByCompanyAdminCode(company.getCompanyAdminCode());
 		while (!companies.isEmpty()) {
-			company.setCompanyAdminCode(CompanyTokenHelper.generateToken(companyName, UserType.ADMIN));
+			company.setCompanyAdminCode(CompanyTokenHelper.generateToken(companyName, UserType.ROLE_ADMIN));
 			companies = companyRepository.findByCompanyAdminCode(company.getCompanyAdminCode());
 		}
 
-		company.setCompanyUserCode(CompanyTokenHelper.generateToken(companyName, UserType.COMMONUSER));
+		company.setCompanyUserCode(CompanyTokenHelper.generateToken(companyName, UserType.ROLE_COMMONUSER));
 		companies = companyRepository.findByCompanyUserCode(company.getCompanyUserCode());
 		while (!companies.isEmpty()) {
-			company.setCompanyUserCode(CompanyTokenHelper.generateToken(companyName, UserType.COMMONUSER));
+			company.setCompanyUserCode(CompanyTokenHelper.generateToken(companyName, UserType.ROLE_COMMONUSER));
 			companies = companyRepository.findByCompanyUserCode(company.getCompanyUserCode());
 		}
 	}
