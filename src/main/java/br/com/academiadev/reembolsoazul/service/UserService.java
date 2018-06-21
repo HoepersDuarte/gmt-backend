@@ -10,8 +10,11 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import br.com.academiadev.reembolsoazul.converter.UserCompanyToUserConverter;
 import br.com.academiadev.reembolsoazul.converter.UserRegisterConverter;
 import br.com.academiadev.reembolsoazul.converter.UserViewConverter;
+import br.com.academiadev.reembolsoazul.dto.CompanyRegisterDTO;
+import br.com.academiadev.reembolsoazul.dto.UserCompanyRegisterDTO;
 import br.com.academiadev.reembolsoazul.dto.UserRegisterDTO;
 import br.com.academiadev.reembolsoazul.dto.UserViewDTO;
 import br.com.academiadev.reembolsoazul.exception.CompanyNotFoundException;
@@ -27,6 +30,9 @@ public class UserService {
 
 	@Autowired
 	private UserRegisterConverter userRegisterConverter;
+	
+	@Autowired
+	private CompanyService companyService;
 
 	@Autowired
 	private UserViewConverter userViewConverter;
@@ -39,6 +45,10 @@ public class UserService {
 	
 	@Autowired
 	private PasswordEncoder passwordEncoder;
+	
+	@Autowired
+	private UserCompanyToUserConverter userCompanyToUserConverter;
+	
 
 	public void save(UserRegisterDTO userRegisterDTO) throws CompanyNotFoundException {
 		User user = userRegisterConverter.toEntity(userRegisterDTO);
@@ -48,6 +58,27 @@ public class UserService {
 		user.setLastPasswordChange(LocalDateTime.now());
 
 		userRepository.save(user);
+	}
+	
+	public void saveUserCompany(UserCompanyRegisterDTO userCompanyRegisterDTO) throws CompanyNotFoundException{
+		
+		CompanyRegisterDTO companyRegisterDTO = new CompanyRegisterDTO();
+		companyRegisterDTO.setName(userCompanyRegisterDTO.getCompanyName());
+		companyService.register(companyRegisterDTO);
+		
+		UserRegisterDTO userRegisterDTO = userCompanyToUserConverter.toDTO(userCompanyRegisterDTO);
+		userRegisterDTO.setCompanyCode(this.findCompanyAdminCodeByName(userCompanyRegisterDTO.getCompanyName()));
+		
+		this.save(userRegisterDTO);
+	}
+
+	private String findCompanyAdminCodeByName(String name) throws CompanyNotFoundException {
+		List<Company> companies = companyRepository.findByName(name);
+		if(companies.size() > 0) {
+			return companies.get(companies.size()-1).getCompanyAdminCode();
+		}else {
+			throw new CompanyNotFoundException();
+		}
 	}
 
 	public User findById(Long id) throws AccessDeniedException {

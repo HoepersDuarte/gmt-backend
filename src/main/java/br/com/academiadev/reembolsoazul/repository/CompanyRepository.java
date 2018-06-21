@@ -13,5 +13,5 @@ public interface CompanyRepository extends CrudRepository<Company, Long> {
 
 	public List<Company> findByCompanyUserCode(String companyUserCode);
 
-	public Company findByName(String name);
+	public List<Company> findByName(String name);
 }
