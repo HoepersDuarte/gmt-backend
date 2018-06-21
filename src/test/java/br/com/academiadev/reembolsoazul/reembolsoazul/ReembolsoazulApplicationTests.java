@@ -10,15 +10,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import br.com.academiadev.reembolsoazul.controller.CompanyController;
-import br.com.academiadev.reembolsoazul.controller.RefundController;
 import br.com.academiadev.reembolsoazul.controller.UserController;
 import br.com.academiadev.reembolsoazul.dto.CompanyRegisterDTO;
-import br.com.academiadev.reembolsoazul.dto.CompanyViewDTO;
 import br.com.academiadev.reembolsoazul.dto.RefundDTO;
+import br.com.academiadev.reembolsoazul.dto.UserCompanyRegisterDTO;
 import br.com.academiadev.reembolsoazul.dto.UserRegisterDTO;
 import br.com.academiadev.reembolsoazul.exception.CompanyNotFoundException;
 import br.com.academiadev.reembolsoazul.exception.UserNotFoundException;
@@ -31,6 +30,7 @@ import br.com.academiadev.reembolsoazul.model.UserType;
 import br.com.academiadev.reembolsoazul.repository.CompanyRepository;
 import br.com.academiadev.reembolsoazul.repository.RefundRepository;
 import br.com.academiadev.reembolsoazul.repository.UserRepository;
+import br.com.academiadev.reembolsoazul.service.RefundService;
 import br.com.academiadev.reembolsoazul.util.CompanyTokenHelper;
 
 @RunWith(SpringRunner.class)
@@ -50,10 +50,13 @@ public class ReembolsoazulApplicationTests {
 	private UserRepository userRepository;
 
 	@Autowired
-	private RefundController refundController;
+	private RefundService refundService;
 
 	@Autowired
 	private RefundRepository refundRepository;
+	
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 
 	@Test
 	public void contextLoads() {
@@ -64,8 +67,8 @@ public class ReembolsoazulApplicationTests {
 		CompanyRegisterDTO companyRegisterDTO = new CompanyRegisterDTO();
 		companyRegisterDTO.setName("Empresa 100");
 		companyController.register(companyRegisterDTO);
-		ResponseEntity<List<CompanyViewDTO>> companies = companyController.getAll();
-		Assert.assertEquals("Empresa 100", companies.getBody().get(0).getName());
+		List<Company> companies = (List<Company>) companyRepository.findByName("Empresa 100");
+		Assert.assertEquals("Empresa 100", companies.get(0).getName());
 	}
 
 	@Test
@@ -77,11 +80,11 @@ public class ReembolsoazulApplicationTests {
 
 		// register company 2
 		CompanyRegisterDTO companyRegisterDTO2 = new CompanyRegisterDTO();
-		companyRegisterDTO1.setName("Empresa 2");
+		companyRegisterDTO2.setName("Empresa 2");
 		companyController.register(companyRegisterDTO2);
 
 		// get the admin code from the first company
-		List<Company> companies = (List<Company>) companyRepository.findAll();
+		List<Company> companies = (List<Company>) companyRepository.findByName("Empresa 1");
 		String admCodeCompany1 = companies.get(0).getCompanyAdminCode();
 
 		List<Company> companyByCode = (List<Company>) companyRepository.findByCompanyAdminCode(admCodeCompany1);
@@ -97,11 +100,11 @@ public class ReembolsoazulApplicationTests {
 
 		// register company 2
 		CompanyRegisterDTO companyRegisterDTO2 = new CompanyRegisterDTO();
-		companyRegisterDTO1.setName("Empresa 2");
+		companyRegisterDTO2.setName("Empresa 2");
 		companyController.register(companyRegisterDTO2);
 
 		// get the admin code from the first company
-		List<Company> companies = (List<Company>) companyRepository.findAll();
+		List<Company> companies = (List<Company>) companyRepository.findByName("Empresa 1");
 		String admCodeCompany1 = companies.get(0).getCompanyAdminCode();
 
 		// register the user
@@ -117,11 +120,12 @@ public class ReembolsoazulApplicationTests {
 		}
 
 		// get the user registered
-		User user = ((List<User>) userRepository.findAll()).get(0);
-
-		Assert.assertTrue(user.getName().equals("name1") && user.getEmail().equals("email1")
-				&& user.getPassword().equals("password1") && user.getUserType().equals(UserType.ROLE_ADMIN)
-				&& user.getCompany().getName().equals("Empresa 1"));
+		User user = userRepository.findByEmail("email1");
+		Assert.assertTrue(user.getName().equals("name1") &&
+				user.getEmail().equals("email1") &&
+				passwordEncoder.matches("password1", user.getPassword()) &&
+				user.getUserType().equals(UserType.ROLE_ADMIN) &&
+				user.getCompany().getName().equals("Empresa 1"));
 	}
 
 	@Test
@@ -132,15 +136,15 @@ public class ReembolsoazulApplicationTests {
 		companyController.register(companyRegisterDTO1);
 
 		// get the admin code from the first company
-		List<Company> companies = (List<Company>) companyRepository.findAll();
-		String admCodeCompany1 = companies.get(0).getCompanyAdminCode();
+		List<Company> companies = (List<Company>) companyRepository.findByName("Empresa 1");
+		String userCodeCompany1 = companies.get(0).getCompanyUserCode();
 
 		// register the user
 		UserRegisterDTO userDTO = new UserRegisterDTO();
 		userDTO.setName("name1");
-		userDTO.setEmail("email1");
+		userDTO.setEmail("email2");
 		userDTO.setPassword("password1");
-		userDTO.setCompanyCode(admCodeCompany1);
+		userDTO.setCompanyCode(userCodeCompany1);
 		try {
 			userController.register(userDTO);
 		} catch (CompanyNotFoundException e) {
@@ -148,7 +152,7 @@ public class ReembolsoazulApplicationTests {
 		}
 
 		// get the user registered
-		User user = ((List<User>) userRepository.findAll()).get(0);
+		User user = userRepository.findByEmail("email2");
 
 		// register the refund
 		RefundDTO refundDTO = new RefundDTO();
@@ -160,13 +164,13 @@ public class ReembolsoazulApplicationTests {
 		refundDTO.setValue("1000");
 
 		try {
-			refundController.register(refundDTO);
+			refundService.register(refundDTO);
 		} catch (UserNotFoundException e) {
 			e.printStackTrace();
 		}
 
 		// get the refund registered
-		Refund refund = ((List<Refund>) refundRepository.findAll()).get(0);
+		Refund refund = ((List<Refund>) refundRepository.findByName("RefundName")).get(0);
 
 		Assert.assertTrue(refund.getName().equals("RefundName")
 				&& refund.getValue().compareTo(new BigDecimal("1000")) == 0 && refund.getFile().equals("file")
@@ -187,6 +191,35 @@ public class ReembolsoazulApplicationTests {
 		String hash2 = CompanyTokenHelper.generateToken(companyName, userType);
 
 		Assert.assertTrue(!hash1.equals(hash2));
+	}
+	
+	@Test
+	public void registerCompanyAndUser() {
+		// register company 1
+		UserCompanyRegisterDTO userCompanyRegisterDTO = new UserCompanyRegisterDTO();
+		userCompanyRegisterDTO.setName("Pessoa 1");
+		userCompanyRegisterDTO.setEmail("email@pessoa.com");
+		userCompanyRegisterDTO.setPassword("123456");
+		userCompanyRegisterDTO.setCompanyName("Empresa legal");
+		
+		try {
+			userController.registerUserCompany(userCompanyRegisterDTO);
+		} catch (CompanyNotFoundException e) {
+			e.printStackTrace();
+		}
+		
+		//Find the company and user registered
+		Company company = companyRepository.findByName("Empresa legal").get(0);
+		User user = userRepository.findByEmail("email@pessoa.com");
+		
+		Assert.assertTrue(
+				user.getName().equals("Pessoa 1") &&
+				user.getEmail().equals("email@pessoa.com") &&
+				passwordEncoder.matches("123456", user.getPassword()) &&
+				user.getCompany().getName().equals("Empresa legal") &&
+				user.getUserType() == UserType.ROLE_ADMIN &&
+				company.getName().equals("Empresa legal")
+		);
 	}
 
 }
