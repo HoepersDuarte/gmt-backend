@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.academiadev.reembolsoazul.dto.UserCompanyRegisterDTO;
 import br.com.academiadev.reembolsoazul.dto.UserRegisterDTO;
 import br.com.academiadev.reembolsoazul.dto.UserViewDTO;
 import br.com.academiadev.reembolsoazul.exception.CompanyNotFoundException;
@@ -37,6 +38,14 @@ public class UserController {
 	public ResponseEntity<UserRegisterDTO> register(@RequestBody UserRegisterDTO userRegisterDTO)
 			throws CompanyNotFoundException {
 		userService.save(userRegisterDTO);
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+	
+	@ApiOperation(value = "Cadastra um usuario e uma empresa")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Usuario e empresa cadastrados com sucesso") })
+	@PostMapping("/newCompany")
+	public ResponseEntity<UserRegisterDTO> registerUserCompany(@RequestBody UserCompanyRegisterDTO userCompanyRegisterDTO) throws CompanyNotFoundException {
+		userService.saveUserCompany(userCompanyRegisterDTO);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
