@@ -62,7 +62,7 @@ public class ReembolsoazulApplicationTests {
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
-	
+
 	@Autowired
 	private EmailService emailService;
 
@@ -235,18 +235,16 @@ public class ReembolsoazulApplicationTests {
 				&& user.getCompany().getName().equals("Empresa legal") && user.getUserType() == UserType.ROLE_ADMIN
 				&& company.getName().equals("Empresa legal"));
 	}
-	
-/*	
-*	@Test
-*	public void sendEmailTest() {
-*		try {
-*			emailService.send("bluerefund@gmail.com", "Subject", "Text");
-*		} catch (MessagingException e) {
-*			e.printStackTrace();
-*			Assert.assertTrue(false);
-*		}
-*		Assert.assertTrue(true);
-*	}
-*/
-	
+
+//	@Test
+//	public void sendEmailTest() {
+//		try {
+//			emailService.send("bluerefund@gmail.com", "Subject2", "Text2");
+//		} catch (MessagingException e) {
+//			e.printStackTrace();
+//			Assert.assertTrue(false);
+//		}
+//		Assert.assertTrue(true);
+//	}
+
 }
