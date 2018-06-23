@@ -18,12 +18,15 @@ import br.com.academiadev.reembolsoazul.dto.UserCompanyRegisterDTO;
 import br.com.academiadev.reembolsoazul.dto.UserRegisterDTO;
 import br.com.academiadev.reembolsoazul.dto.UserViewDTO;
 import br.com.academiadev.reembolsoazul.exception.CompanyNotFoundException;
+import br.com.academiadev.reembolsoazul.exception.InvalidEmailFormatException;
+import br.com.academiadev.reembolsoazul.exception.InvalidPasswordFormatException;
 import br.com.academiadev.reembolsoazul.model.Company;
 import br.com.academiadev.reembolsoazul.model.User;
 import br.com.academiadev.reembolsoazul.model.UserType;
 import br.com.academiadev.reembolsoazul.repository.CompanyRepository;
 import br.com.academiadev.reembolsoazul.repository.UserRepository;
 import br.com.academiadev.reembolsoazul.util.Util;
+import br.com.academiadev.reembolsoazul.util.ValidationsHelper;
 
 @Service
 public class UserService {
@@ -49,17 +52,25 @@ public class UserService {
 	@Autowired
 	private UserCompanyToUserConverter userCompanyToUserConverter;
 
-	public void save(UserRegisterDTO userRegisterDTO) throws CompanyNotFoundException {
+	public void save(UserRegisterDTO userRegisterDTO) throws CompanyNotFoundException, InvalidPasswordFormatException, InvalidEmailFormatException {
 		User user = userRegisterConverter.toEntity(userRegisterDTO);
 
 		getUserTypeAndCompany(user, userRegisterDTO.getCompanyCode());
+		
+		if(!ValidationsHelper.passwordFormatValidation(userRegisterDTO.getPassword())) {
+			throw new InvalidPasswordFormatException();
+		}
+		
+		if(!ValidationsHelper.emailValidation(userRegisterDTO.getEmail())) {
+			throw new InvalidEmailFormatException();
+		}
 		user.setPassword(passwordEncoder.encode(userRegisterDTO.getPassword()));
 		user.setLastPasswordChange(LocalDateTime.now());
 
 		userRepository.save(user);
 	}
 
-	public void saveUserCompany(UserCompanyRegisterDTO userCompanyRegisterDTO) throws CompanyNotFoundException {
+	public void saveUserCompany(UserCompanyRegisterDTO userCompanyRegisterDTO) throws CompanyNotFoundException, InvalidPasswordFormatException, InvalidEmailFormatException {
 
 		CompanyRegisterDTO companyRegisterDTO = new CompanyRegisterDTO();
 		companyRegisterDTO.setName(userCompanyRegisterDTO.getCompanyName());

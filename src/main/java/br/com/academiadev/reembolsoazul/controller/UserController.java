@@ -16,6 +16,8 @@ import br.com.academiadev.reembolsoazul.dto.UserCompanyRegisterDTO;
 import br.com.academiadev.reembolsoazul.dto.UserRegisterDTO;
 import br.com.academiadev.reembolsoazul.dto.UserViewDTO;
 import br.com.academiadev.reembolsoazul.exception.CompanyNotFoundException;
+import br.com.academiadev.reembolsoazul.exception.InvalidEmailFormatException;
+import br.com.academiadev.reembolsoazul.exception.InvalidPasswordFormatException;
 import br.com.academiadev.reembolsoazul.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -36,7 +38,7 @@ public class UserController {
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Usuario cadastrado com sucesso") })
 	@PostMapping("/")
 	public ResponseEntity<UserRegisterDTO> register(@RequestBody UserRegisterDTO userRegisterDTO)
-			throws CompanyNotFoundException {
+			throws CompanyNotFoundException, InvalidPasswordFormatException, InvalidEmailFormatException {
 		userService.save(userRegisterDTO);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
@@ -45,7 +47,7 @@ public class UserController {
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Usuario e empresa cadastrados com sucesso") })
 	@PostMapping("/newCompany")
 	public ResponseEntity<UserRegisterDTO> registerUserCompany(
-			@RequestBody UserCompanyRegisterDTO userCompanyRegisterDTO) throws CompanyNotFoundException {
+			@RequestBody UserCompanyRegisterDTO userCompanyRegisterDTO) throws CompanyNotFoundException, InvalidPasswordFormatException, InvalidEmailFormatException {
 		userService.saveUserCompany(userCompanyRegisterDTO);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
