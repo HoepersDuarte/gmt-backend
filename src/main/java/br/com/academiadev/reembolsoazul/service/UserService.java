@@ -30,7 +30,7 @@ public class UserService {
 
 	@Autowired
 	private UserRegisterConverter userRegisterConverter;
-	
+
 	@Autowired
 	private CompanyService companyService;
 
@@ -42,13 +42,12 @@ public class UserService {
 
 	@Autowired
 	private CompanyRepository companyRepository;
-	
+
 	@Autowired
 	private PasswordEncoder passwordEncoder;
-	
+
 	@Autowired
 	private UserCompanyToUserConverter userCompanyToUserConverter;
-	
 
 	public void save(UserRegisterDTO userRegisterDTO) throws CompanyNotFoundException {
 		User user = userRegisterConverter.toEntity(userRegisterDTO);
@@ -59,24 +58,24 @@ public class UserService {
 
 		userRepository.save(user);
 	}
-	
-	public void saveUserCompany(UserCompanyRegisterDTO userCompanyRegisterDTO) throws CompanyNotFoundException{
-		
+
+	public void saveUserCompany(UserCompanyRegisterDTO userCompanyRegisterDTO) throws CompanyNotFoundException {
+
 		CompanyRegisterDTO companyRegisterDTO = new CompanyRegisterDTO();
 		companyRegisterDTO.setName(userCompanyRegisterDTO.getCompanyName());
 		companyService.register(companyRegisterDTO);
-		
+
 		UserRegisterDTO userRegisterDTO = userCompanyToUserConverter.toDTO(userCompanyRegisterDTO);
 		userRegisterDTO.setCompanyCode(this.findCompanyAdminCodeByName(userCompanyRegisterDTO.getCompanyName()));
-		
+
 		this.save(userRegisterDTO);
 	}
 
 	private String findCompanyAdminCodeByName(String name) throws CompanyNotFoundException {
 		List<Company> companies = companyRepository.findByName(name);
-		if(companies.size() > 0) {
-			return companies.get(companies.size()-1).getCompanyAdminCode();
-		}else {
+		if (companies.size() > 0) {
+			return companies.get(companies.size() - 1).getCompanyAdminCode();
+		} else {
 			throw new CompanyNotFoundException();
 		}
 	}

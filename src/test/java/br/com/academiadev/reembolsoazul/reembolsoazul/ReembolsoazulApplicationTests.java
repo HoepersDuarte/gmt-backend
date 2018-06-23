@@ -54,7 +54,7 @@ public class ReembolsoazulApplicationTests {
 
 	@Autowired
 	private RefundRepository refundRepository;
-	
+
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
@@ -121,11 +121,9 @@ public class ReembolsoazulApplicationTests {
 
 		// get the user registered
 		User user = userRepository.findByEmail("email1");
-		Assert.assertTrue(user.getName().equals("name1") &&
-				user.getEmail().equals("email1") &&
-				passwordEncoder.matches("password1", user.getPassword()) &&
-				user.getUserType().equals(UserType.ROLE_ADMIN) &&
-				user.getCompany().getName().equals("Empresa 1"));
+		Assert.assertTrue(user.getName().equals("name1") && user.getEmail().equals("email1")
+				&& passwordEncoder.matches("password1", user.getPassword())
+				&& user.getUserType().equals(UserType.ROLE_ADMIN) && user.getCompany().getName().equals("Empresa 1"));
 	}
 
 	@Test
@@ -192,7 +190,7 @@ public class ReembolsoazulApplicationTests {
 
 		Assert.assertTrue(!hash1.equals(hash2));
 	}
-	
+
 	@Test
 	public void registerCompanyAndUser() {
 		// register company 1
@@ -201,25 +199,21 @@ public class ReembolsoazulApplicationTests {
 		userCompanyRegisterDTO.setEmail("email@pessoa.com");
 		userCompanyRegisterDTO.setPassword("123456");
 		userCompanyRegisterDTO.setCompanyName("Empresa legal");
-		
+
 		try {
 			userController.registerUserCompany(userCompanyRegisterDTO);
 		} catch (CompanyNotFoundException e) {
 			e.printStackTrace();
 		}
-		
-		//Find the company and user registered
+
+		// Find the company and user registered
 		Company company = companyRepository.findByName("Empresa legal").get(0);
 		User user = userRepository.findByEmail("email@pessoa.com");
-		
-		Assert.assertTrue(
-				user.getName().equals("Pessoa 1") &&
-				user.getEmail().equals("email@pessoa.com") &&
-				passwordEncoder.matches("123456", user.getPassword()) &&
-				user.getCompany().getName().equals("Empresa legal") &&
-				user.getUserType() == UserType.ROLE_ADMIN &&
-				company.getName().equals("Empresa legal")
-		);
+
+		Assert.assertTrue(user.getName().equals("Pessoa 1") && user.getEmail().equals("email@pessoa.com")
+				&& passwordEncoder.matches("123456", user.getPassword())
+				&& user.getCompany().getName().equals("Empresa legal") && user.getUserType() == UserType.ROLE_ADMIN
+				&& company.getName().equals("Empresa legal"));
 	}
 
 }

@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mobile.device.Device;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -54,8 +53,9 @@ public class AuthController {
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public ResponseEntity<?> login(@RequestBody LoginDTO authenticationRequest, HttpServletResponse response,
 			Device device) throws AuthenticationException, IOException {
-		final Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-				authenticationRequest.getEmail(), authenticationRequest.getPassword()));
+		final Authentication authentication = authenticationManager
+				.authenticate(new UsernamePasswordAuthenticationToken(authenticationRequest.getEmail(),
+						authenticationRequest.getPassword()));
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 		User user = (User) authentication.getPrincipal();
 		String token = tokenHelper.generateToken(user.getUsername(), device);
@@ -65,7 +65,7 @@ public class AuthController {
 
 	@RequestMapping(value = "/refresh", method = RequestMethod.POST)
 	@ApiImplicitParams({ //
-		@ApiImplicitParam(name = "Authorization", value = "Authorization token", required = true, dataType = "string", paramType = "header") //
+			@ApiImplicitParam(name = "Authorization", value = "Authorization token", required = true, dataType = "string", paramType = "header") //
 	})
 	public ResponseEntity<?> refresh(HttpServletRequest request, HttpServletResponse response, Principal principal) {
 		String token = tokenHelper.getToken(request);
@@ -106,7 +106,7 @@ public class AuthController {
 
 	@RequestMapping(value = "/change-password", method = RequestMethod.POST)
 	@ApiImplicitParams({ //
-		@ApiImplicitParam(name = "Authorization", value = "Authorization token", required = true, dataType = "string", paramType = "header") //
+			@ApiImplicitParam(name = "Authorization", value = "Authorization token", required = true, dataType = "string", paramType = "header") //
 	})
 	public ResponseEntity<?> changePassword(@RequestBody ChangePasswordDTO changePasswordDTO) {
 		userDetailsService.changePassword(changePasswordDTO.oldPassword, changePasswordDTO.newPassword);

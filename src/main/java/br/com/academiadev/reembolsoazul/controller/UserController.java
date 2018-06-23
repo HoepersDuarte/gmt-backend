@@ -40,11 +40,12 @@ public class UserController {
 		userService.save(userRegisterDTO);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
-	
+
 	@ApiOperation(value = "Cadastra um usuario e uma empresa")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Usuario e empresa cadastrados com sucesso") })
 	@PostMapping("/newCompany")
-	public ResponseEntity<UserRegisterDTO> registerUserCompany(@RequestBody UserCompanyRegisterDTO userCompanyRegisterDTO) throws CompanyNotFoundException {
+	public ResponseEntity<UserRegisterDTO> registerUserCompany(
+			@RequestBody UserCompanyRegisterDTO userCompanyRegisterDTO) throws CompanyNotFoundException {
 		userService.saveUserCompany(userCompanyRegisterDTO);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
@@ -52,7 +53,7 @@ public class UserController {
 	@ApiOperation(value = "Retorna todos os usuarios cadastrados", response = UserRegisterDTO[].class)
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Lista recebida com sucesso") })
 	@ApiImplicitParams({ //
-		@ApiImplicitParam(name = "Authorization", value = "Authorization token", required = true, dataType = "string", paramType = "header") //
+			@ApiImplicitParam(name = "Authorization", value = "Authorization token", required = true, dataType = "string", paramType = "header") //
 	})
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@GetMapping("/")

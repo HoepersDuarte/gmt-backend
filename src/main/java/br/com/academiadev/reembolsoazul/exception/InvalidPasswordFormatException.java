@@ -1,5 +1,5 @@
 package br.com.academiadev.reembolsoazul.exception;
 
-public class InvalidPasswordFormatException extends Exception{
+public class InvalidPasswordFormatException extends Exception {
 
 }

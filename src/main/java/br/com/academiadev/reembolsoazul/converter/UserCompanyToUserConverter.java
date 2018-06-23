@@ -7,7 +7,7 @@ import br.com.academiadev.reembolsoazul.dto.UserCompanyRegisterDTO;
 import br.com.academiadev.reembolsoazul.dto.UserRegisterDTO;
 
 @Component
-public class UserCompanyToUserConverter implements Converter<UserCompanyRegisterDTO, UserRegisterDTO>{
+public class UserCompanyToUserConverter implements Converter<UserCompanyRegisterDTO, UserRegisterDTO> {
 
 	@Override
 	public UserRegisterDTO toDTO(UserCompanyRegisterDTO entity) {
