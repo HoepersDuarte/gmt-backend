@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -70,6 +72,7 @@ public class UserService {
 		userRepository.save(user);
 	}
 
+	@Transactional
 	public void saveUserCompany(UserCompanyRegisterDTO userCompanyRegisterDTO) throws CompanyNotFoundException, InvalidPasswordFormatException, InvalidEmailFormatException {
 
 		CompanyRegisterDTO companyRegisterDTO = new CompanyRegisterDTO();

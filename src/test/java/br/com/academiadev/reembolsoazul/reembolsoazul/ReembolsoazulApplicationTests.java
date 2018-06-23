@@ -5,6 +5,8 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+import javax.mail.MessagingException;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,6 +34,7 @@ import br.com.academiadev.reembolsoazul.model.UserType;
 import br.com.academiadev.reembolsoazul.repository.CompanyRepository;
 import br.com.academiadev.reembolsoazul.repository.RefundRepository;
 import br.com.academiadev.reembolsoazul.repository.UserRepository;
+import br.com.academiadev.reembolsoazul.service.EmailService;
 import br.com.academiadev.reembolsoazul.service.RefundService;
 import br.com.academiadev.reembolsoazul.util.CompanyTokenHelper;
 
@@ -59,6 +62,9 @@ public class ReembolsoazulApplicationTests {
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
+	
+	@Autowired
+	private EmailService emailService;
 
 	@Test
 	public void contextLoads() {
@@ -229,5 +235,18 @@ public class ReembolsoazulApplicationTests {
 				&& user.getCompany().getName().equals("Empresa legal") && user.getUserType() == UserType.ROLE_ADMIN
 				&& company.getName().equals("Empresa legal"));
 	}
-
+	
+/*	
+*	@Test
+*	public void sendEmailTest() {
+*		try {
+*			emailService.send("bluerefund@gmail.com", "Subject", "Text");
+*		} catch (MessagingException e) {
+*			e.printStackTrace();
+*			Assert.assertTrue(false);
+*		}
+*		Assert.assertTrue(true);
+*	}
+*/
+	
 }
