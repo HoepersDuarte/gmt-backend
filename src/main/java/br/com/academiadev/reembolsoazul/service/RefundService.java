@@ -17,6 +17,7 @@ import br.com.academiadev.reembolsoazul.exception.UserNotFoundException;
 import br.com.academiadev.reembolsoazul.model.Refund;
 import br.com.academiadev.reembolsoazul.model.RefundStatus;
 import br.com.academiadev.reembolsoazul.model.User;
+import br.com.academiadev.reembolsoazul.model.UserType;
 import br.com.academiadev.reembolsoazul.repository.RefundRepository;
 import br.com.academiadev.reembolsoazul.repository.UserRepository;
 import br.com.academiadev.reembolsoazul.util.Util;
@@ -45,10 +46,21 @@ public class RefundService {
 		refundRepository.save(refund);
 	}
 
-	public List<RefundViewDTO> findAll() {
-		return Util.toList(refundRepository.findAll()).stream().map(e -> {
-			return refundViewConverter.toDTO(e);
-		}).collect(Collectors.toList());
+	public List<RefundViewDTO> findAll() throws UserNotFoundException {
+		
+		User user = findUserByToken();
+		UserType userType = user.getUserType();
+		
+		if(userType == UserType.ROLE_ADMIN) {
+			return Util.toList(refundRepository.findByUser_Company(user.getCompany())).stream().map(e -> {
+				return refundViewConverter.toDTO(e);
+			}).collect(Collectors.toList());
+		}else if(userType == UserType.ROLE_COMMONUSER){
+			return Util.toList(refundRepository.findByUser(user)).stream().map(e -> {
+				return refundViewConverter.toDTO(e);
+			}).collect(Collectors.toList());
+		}
+		throw new UserNotFoundException();
 	}
 
 	private User findUserByToken() throws UserNotFoundException {
