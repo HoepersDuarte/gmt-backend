@@ -48,10 +48,19 @@ public class RefundController {
 			@ApiImplicitParam(name = "Authorization", value = "Authorization token", required = true, dataType = "string", paramType = "header") //
 	})
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Lista recebida com sucesso") })
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@GetMapping("/")
-	public ResponseEntity<List<RefundViewDTO>> getAll() {
+	public ResponseEntity<List<RefundViewDTO>> getAll() throws UserNotFoundException {
 		return new ResponseEntity<>(refundService.findAll(), HttpStatus.OK);
+	}
+	
+	@ApiOperation(value = "Retorna todos as categorias cadastradas", response = RefundRegisterDTO[].class)
+	@ApiImplicitParams({ //
+			@ApiImplicitParam(name = "Authorization", value = "Authorization token", required = true, dataType = "string", paramType = "header") //
+	})
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Lista recebida com sucesso") })
+	@GetMapping("/category")
+	public ResponseEntity<List<String>> getAllCategories() throws UserNotFoundException {
+		return new ResponseEntity<>(refundService.findAllCategories(), HttpStatus.OK);
 	}
 
 }
