@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
+import br.com.academiadev.reembolsoazul.model.EmailConfig;
 import br.com.academiadev.reembolsoazul.repository.EmailConfigRepository;
 
 @SpringBootApplication
@@ -26,16 +27,24 @@ public class ReembolsoazulApplication {
 	    JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
 	    mailSender.setHost("smtp.gmail.com");
 	    mailSender.setPort(587);
-	     
-		mailSender.setUsername(emailConfigRepository.findByKey("email").getValue());
-		mailSender.setPassword(emailConfigRepository.findByKey("password").getValue());
-	     
+	    
+	    EmailConfig emailUsername = emailConfigRepository.findByKey("email");
+	    EmailConfig emailPassword = emailConfigRepository.findByKey("password");
+	    
+	    if(emailUsername != null && emailPassword != null) {
+			mailSender.setUsername(emailUsername.getValue());
+			mailSender.setPassword(emailPassword.getValue());	    	
+	    } else {
+	    	mailSender.setUsername("null");
+			mailSender.setPassword("null");
+	    }
+	    
 	    Properties props = mailSender.getJavaMailProperties();
 	    props.put("mail.transport.protocol", "smtp");
 	    props.put("mail.smtp.auth", "true");
 	    props.put("mail.smtp.starttls.enable", "true");
 	    props.put("mail.debug", "true");
-	     
+	    
 	    return mailSender;
 	}
 }
