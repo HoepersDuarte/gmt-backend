@@ -57,7 +57,7 @@ public class UserService {
 	public void save(UserRegisterDTO userRegisterDTO) throws CompanyNotFoundException, InvalidPasswordFormatException, InvalidEmailFormatException {
 		User user = userRegisterConverter.toEntity(userRegisterDTO);
 
-		getUserTypeAndCompany(user, userRegisterDTO.getCompanyCode());
+		getUserTypeAndCompany(user, userRegisterDTO.getCompany());
 		
 		if(!ValidationsHelper.passwordFormatValidation(userRegisterDTO.getPassword())) {
 			throw new InvalidPasswordFormatException();
@@ -76,11 +76,11 @@ public class UserService {
 	public void saveUserCompany(UserCompanyRegisterDTO userCompanyRegisterDTO) throws CompanyNotFoundException, InvalidPasswordFormatException, InvalidEmailFormatException {
 
 		CompanyRegisterDTO companyRegisterDTO = new CompanyRegisterDTO();
-		companyRegisterDTO.setName(userCompanyRegisterDTO.getCompanyName());
+		companyRegisterDTO.setName(userCompanyRegisterDTO.getCompany());
 		companyService.register(companyRegisterDTO);
 
 		UserRegisterDTO userRegisterDTO = userCompanyToUserConverter.toDTO(userCompanyRegisterDTO);
-		userRegisterDTO.setCompanyCode(this.findCompanyAdminCodeByName(userCompanyRegisterDTO.getCompanyName()));
+		userRegisterDTO.setCompany(this.findCompanyAdminCodeByName(userCompanyRegisterDTO.getCompany()));
 
 		this.save(userRegisterDTO);
 	}

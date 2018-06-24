@@ -120,7 +120,7 @@ public class ReembolsoazulApplicationTests {
 		userRegisterDTO.setName("name1");
 		userRegisterDTO.setEmail("email1@example.com");
 		userRegisterDTO.setPassword("1aA+1234");
-		userRegisterDTO.setCompanyCode(admCodeCompany1);
+		userRegisterDTO.setCompany(admCodeCompany1);
 		try {
 			userController.register(userRegisterDTO);
 		} catch (CompanyNotFoundException e) {
@@ -160,7 +160,7 @@ public class ReembolsoazulApplicationTests {
 		userCompanyRegisterDTO.setName("Pessoa 1");
 		userCompanyRegisterDTO.setEmail("email@pessoa.com");
 		userCompanyRegisterDTO.setPassword("1aA+1234");
-		userCompanyRegisterDTO.setCompanyName("Empresa legal");
+		userCompanyRegisterDTO.setCompany("Empresa legal");
 
 		try {
 			userController.registerUserCompany(userCompanyRegisterDTO);

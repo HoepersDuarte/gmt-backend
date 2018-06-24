@@ -61,7 +61,7 @@ public class AbstractTokenHelper {
 
 	protected LocalDateTime generateExpirationDate(Device device) {
 		long expiresIn = device.isTablet() || device.isMobile() ? MOBILE_EXPIRES_IN : EXPIRES_IN;
-		return LocalDateTime.now().plusSeconds(expiresIn * 1000);
+		return LocalDateTime.now().plusSeconds(expiresIn * 10);
 	}
 
 	protected Boolean isCreatedBeforeLastPasswordReset(LocalDateTime created, LocalDateTime lastPasswordReset) {
