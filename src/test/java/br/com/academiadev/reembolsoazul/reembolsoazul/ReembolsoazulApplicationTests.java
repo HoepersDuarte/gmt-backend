@@ -133,9 +133,11 @@ public class ReembolsoazulApplicationTests {
 
 		// get the user registered
 		User user = userRepository.findByEmail("email1@example.com");
-		Assert.assertTrue(user.getName().equals("name1") && user.getEmail().equals("email1@example.com")
-				&& passwordEncoder.matches("1aA+1234", user.getPassword())
-				&& user.getUserType().equals(UserType.ROLE_ADMIN) && user.getCompany().getName().equals("Empresa 1"));
+		Assert.assertTrue(user.getName().equals("name1"));
+		Assert.assertTrue(user.getEmail().equals("email1@example.com"));
+		Assert.assertTrue(passwordEncoder.matches("1aA+1234", user.getPassword()));
+		Assert.assertTrue(user.getUserType().equals(UserType.ROLE_ADMIN));
+		Assert.assertTrue(user.getCompany().getName().equals("Empresa 1"));
 	}
 
 	@Test
@@ -186,12 +188,13 @@ public class ReembolsoazulApplicationTests {
 		// get the refund registered
 		Refund refund = ((List<Refund>) refundRepository.findByName("RefundName")).get(0);
 
-		Assert.assertTrue(refund.getName().equals("RefundName")
-				&& refund.getValue().compareTo(new BigDecimal("1000")) == 0 && refund.getFile().equals("file")
-				&& refund.getDate().equals(LocalDate.parse("10/10/2010", DateTimeFormatter.ofPattern("dd/MM/yyyy")))
-				&& refund.getUser().getName().equals(user.getName())
-				&& refund.getRefundCategory().equals(RefundCategory.ALIMENTACAO)
-				&& refund.getRefundStatus().equals(RefundStatus.WAITING));
+		Assert.assertTrue(refund.getName().equals("RefundName"));
+		Assert.assertTrue(refund.getValue().compareTo(new BigDecimal("1000")) == 0);
+		Assert.assertTrue(refund.getFile().equals("file"));
+		Assert.assertTrue(refund.getDate().equals(LocalDate.parse("10/10/2010", DateTimeFormatter.ofPattern("dd/MM/yyyy"))));
+		Assert.assertTrue(refund.getUser().getName().equals(user.getName()));
+		Assert.assertTrue(refund.getRefundCategory().equals(RefundCategory.ALIMENTACAO));
+		Assert.assertTrue(refund.getRefundStatus().equals(RefundStatus.WAITING));
 	}
 
 	@Test
@@ -230,10 +233,12 @@ public class ReembolsoazulApplicationTests {
 		Company company = companyRepository.findByName("Empresa legal").get(0);
 		User user = userRepository.findByEmail("email@pessoa.com");
 
-		Assert.assertTrue(user.getName().equals("Pessoa 1") && user.getEmail().equals("email@pessoa.com")
-				&& passwordEncoder.matches("1aA+1234", user.getPassword())
-				&& user.getCompany().getName().equals("Empresa legal") && user.getUserType() == UserType.ROLE_ADMIN
-				&& company.getName().equals("Empresa legal"));
+		Assert.assertTrue(user.getName().equals("Pessoa 1"));
+		Assert.assertTrue(user.getEmail().equals("email@pessoa.com"));
+		Assert.assertTrue(passwordEncoder.matches("1aA+1234", user.getPassword()));
+		Assert.assertTrue(user.getCompany().getName().equals("Empresa legal"));
+		Assert.assertTrue(user.getUserType() == UserType.ROLE_ADMIN);
+		Assert.assertTrue(company.getName().equals("Empresa legal"));
 	}
 
 //	@Test
