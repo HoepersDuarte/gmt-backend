@@ -2,7 +2,7 @@ package br.com.academiadev.reembolsoazul.dto;
 
 import io.swagger.annotations.ApiModelProperty;
 
-public class RefundDTO {
+public class RefundRegisterDTO {
 
 	@ApiModelProperty(value = "Nome do reembolso", example = "Reembolso exemplo")
 	private String name;

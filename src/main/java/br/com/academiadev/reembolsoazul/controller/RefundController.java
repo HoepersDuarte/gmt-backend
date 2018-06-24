@@ -12,7 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.academiadev.reembolsoazul.dto.RefundDTO;
+import br.com.academiadev.reembolsoazul.dto.RefundRegisterDTO;
+import br.com.academiadev.reembolsoazul.dto.RefundViewDTO;
 import br.com.academiadev.reembolsoazul.exception.UserNotFoundException;
 import br.com.academiadev.reembolsoazul.service.RefundService;
 import io.swagger.annotations.Api;
@@ -37,19 +38,19 @@ public class RefundController {
 	})
 	@PreAuthorize("hasRole('ROLE_COMMONUSER')")
 	@PostMapping("/")
-	public ResponseEntity<RefundDTO> register(@RequestBody RefundDTO refundDTO) throws UserNotFoundException {
+	public ResponseEntity<RefundRegisterDTO> register(@RequestBody RefundRegisterDTO refundDTO) throws UserNotFoundException {
 		refundService.register(refundDTO);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
-	@ApiOperation(value = "Retorna todos os reembolsos cadastrados", response = RefundDTO[].class)
+	@ApiOperation(value = "Retorna todos os reembolsos cadastrados", response = RefundRegisterDTO[].class)
 	@ApiImplicitParams({ //
 			@ApiImplicitParam(name = "Authorization", value = "Authorization token", required = true, dataType = "string", paramType = "header") //
 	})
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Lista recebida com sucesso") })
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@GetMapping("/")
-	public ResponseEntity<List<RefundDTO>> getAll() {
+	public ResponseEntity<List<RefundViewDTO>> getAll() {
 		return new ResponseEntity<>(refundService.findAll(), HttpStatus.OK);
 	}
 

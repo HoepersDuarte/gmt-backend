@@ -18,7 +18,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import br.com.academiadev.reembolsoazul.controller.CompanyController;
 import br.com.academiadev.reembolsoazul.controller.UserController;
 import br.com.academiadev.reembolsoazul.dto.CompanyRegisterDTO;
-import br.com.academiadev.reembolsoazul.dto.RefundDTO;
+import br.com.academiadev.reembolsoazul.dto.RefundRegisterDTO;
 import br.com.academiadev.reembolsoazul.dto.UserCompanyRegisterDTO;
 import br.com.academiadev.reembolsoazul.dto.UserRegisterDTO;
 import br.com.academiadev.reembolsoazul.exception.CompanyNotFoundException;
@@ -171,7 +171,7 @@ public class ReembolsoazulApplicationTests {
 		User user = userRepository.findByEmail("email2@example.com");
 
 		// register the refund
-		RefundDTO refundDTO = new RefundDTO();
+		RefundRegisterDTO refundDTO = new RefundRegisterDTO();
 		refundDTO.setDate("10/10/2010");
 		refundDTO.setFile("file");
 		refundDTO.setName("RefundName");
