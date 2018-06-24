@@ -75,8 +75,8 @@ public class TokenHelper extends AbstractTokenHelper {
 
 	public String generateToken(String username, Device device) {
 		String audience = generateAudience(device);
-		return Jwts.builder().setIssuer(APP_NAME).setSubject(username)
-				.setAudience(audience).setIssuedAt(timeProvider.toDate(timeProvider.getActualDateTime()))
+		return Jwts.builder().setIssuer(APP_NAME).setSubject(username).setAudience(audience)
+				.setIssuedAt(timeProvider.toDate(timeProvider.getActualDateTime()))
 				.setExpiration(timeProvider.toDate(generateExpirationDate(device)))
 				.signWith(SIGNATURE_ALGORITHM, SECRET).compact();
 	}

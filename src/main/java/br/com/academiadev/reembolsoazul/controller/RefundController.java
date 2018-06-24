@@ -33,7 +33,7 @@ public class RefundController {
 	@ApiOperation(value = "Cadastra um reembolso")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Reembolso cadastrado com sucesso") })
 	@ApiImplicitParams({ //
-		@ApiImplicitParam(name = "Authorization", value = "Authorization token", required = true, dataType = "string", paramType = "header") //
+			@ApiImplicitParam(name = "Authorization", value = "Authorization token", required = true, dataType = "string", paramType = "header") //
 	})
 	@PreAuthorize("hasRole('ROLE_COMMONUSER')")
 	@PostMapping("/")

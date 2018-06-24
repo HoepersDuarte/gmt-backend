@@ -42,7 +42,7 @@ public class User implements UserDetails {
 
 	@ManyToOne
 	private Company company;
-	
+
 	@Column(name = "last_password_change")
 	private LocalDateTime lastPasswordChange;
 
@@ -109,7 +109,7 @@ public class User implements UserDetails {
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		ArrayList<GrantedAuthority> list = new ArrayList<GrantedAuthority>();
-		list.add(this.getUserType());	
+		list.add(this.getUserType());
 		return list;
 	}
 
