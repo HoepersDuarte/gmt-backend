@@ -1,7 +1,6 @@
 package br.com.academiadev.reembolsoazul.config.jwt;
 
 import java.time.LocalDateTime;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -75,20 +74,17 @@ public class TokenHelper extends AbstractTokenHelper {
 	}
 
 	public String generateToken(String username, String userType, String companyName, Device device) {
-		if(device == null) {
-			return Jwts.builder().setIssuer(APP_NAME).setSubject(username)
-					.claim("role", userType)
+		if (device == null) {
+			return Jwts.builder().setIssuer(APP_NAME).setSubject(username).claim("role", userType)
 					.claim("companyName", companyName)
 					.setIssuedAt(timeProvider.toDate(timeProvider.getActualDateTime()))
 					.setExpiration(timeProvider.toDate(LocalDateTime.now().plusSeconds(500)))
 					.signWith(SIGNATURE_ALGORITHM, SECRET).compact();
 		}
-		
+
 		String audience = generateAudience(device);
-		return Jwts.builder().setIssuer(APP_NAME).setSubject(username).setAudience(audience)
-				.claim("role", userType)
-				.claim("companyName", companyName)
-				.setIssuedAt(timeProvider.toDate(timeProvider.getActualDateTime()))
+		return Jwts.builder().setIssuer(APP_NAME).setSubject(username).setAudience(audience).claim("role", userType)
+				.claim("companyName", companyName).setIssuedAt(timeProvider.toDate(timeProvider.getActualDateTime()))
 				.setExpiration(timeProvider.toDate(generateExpirationDate(device)))
 				.signWith(SIGNATURE_ALGORITHM, SECRET).compact();
 	}

@@ -107,6 +107,8 @@ public class TestsWithToken {
 
 		// get the user registered
 		User user = userRepository.findByEmail("email2@example.com");
+		Thread.sleep(1000);// o tempo de criacao do token e ultima modificacao de senha estavam em
+							// conflito, provavelmente por um deles n pegar os milisegundos
 
 		// register the refund
 		RefundRegisterDTO refundDTO = new RefundRegisterDTO();
