@@ -58,7 +58,7 @@ public class AuthController {
 						authenticationRequest.getPassword()));
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 		User user = (User) authentication.getPrincipal();
-		String token = tokenHelper.generateToken(user.getUsername(), device);
+		String token = tokenHelper.generateToken(user.getUsername(), user.getUserType().toString(), user.getCompany().getName(), device);
 		int expiresIn = tokenHelper.getExpiredIn(device);
 		return ResponseEntity.ok(new TokenDTO(token, Long.valueOf(expiresIn)));
 	}

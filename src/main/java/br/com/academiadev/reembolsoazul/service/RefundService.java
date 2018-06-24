@@ -4,10 +4,15 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import br.com.academiadev.reembolsoazul.converter.RefundConverter;
-import br.com.academiadev.reembolsoazul.dto.RefundDTO;
+import br.com.academiadev.reembolsoazul.converter.RefundRegisterConverter;
+import br.com.academiadev.reembolsoazul.converter.RefundViewConverter;
+import br.com.academiadev.reembolsoazul.dto.RefundRegisterDTO;
+import br.com.academiadev.reembolsoazul.dto.RefundViewDTO;
 import br.com.academiadev.reembolsoazul.exception.UserNotFoundException;
 import br.com.academiadev.reembolsoazul.model.Refund;
 import br.com.academiadev.reembolsoazul.model.RefundStatus;
@@ -20,7 +25,10 @@ import br.com.academiadev.reembolsoazul.util.Util;
 public class RefundService {
 
 	@Autowired
-	private RefundConverter refundConverter;
+	private RefundRegisterConverter refundRegisterConverter;
+	
+	@Autowired
+	private RefundViewConverter refundViewConverter;
 
 	@Autowired
 	private RefundRepository refundRepository;
@@ -28,27 +36,29 @@ public class RefundService {
 	@Autowired
 	private UserRepository userRepository;
 
-	public void register(RefundDTO refundDTO) throws UserNotFoundException {
-		Refund refund = refundConverter.toEntity(refundDTO);
+	public void register(RefundRegisterDTO refundDTO) throws UserNotFoundException {
+		Refund refund = refundRegisterConverter.toEntity(refundDTO);
 		refund.setRefundStatus(RefundStatus.WAITING);
-		refund.setUser(findUser(refundDTO.getUser()));
+		refund.setUser(findUserByToken());
+		
 
 		refundRepository.save(refund);
 	}
 
-	public List<RefundDTO> findAll() {
+	public List<RefundViewDTO> findAll() {
 		return Util.toList(refundRepository.findAll()).stream().map(e -> {
-			return refundConverter.toDTO(e);
+			return refundViewConverter.toDTO(e);
 		}).collect(Collectors.toList());
 	}
 
-	private User findUser(Long userId) throws UserNotFoundException {
-		List<User> user = userRepository.findById(userId);
-		if (user.size() == 1) {
-			return user.get(0);
+	private User findUserByToken() throws UserNotFoundException {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		UserDetails userDetail = (UserDetails) authentication.getPrincipal();
+		User user = userRepository.findByEmail(userDetail.getUsername());
+		if(user != null) {
+			return user;
 		}
 		throw new UserNotFoundException();
-
 	}
 
 }

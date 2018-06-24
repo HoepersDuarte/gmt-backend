@@ -13,7 +13,7 @@ public class UserCompanyRegisterDTO {
 	private String password;
 
 	@ApiModelProperty(value = "Nome da empresa", example = "Empresa exemplo")
-	private String companyName;
+	private String company;
 
 	public String getName() {
 		return name;
@@ -39,11 +39,11 @@ public class UserCompanyRegisterDTO {
 		this.password = password;
 	}
 
-	public String getCompanyName() {
-		return companyName;
+	public String getCompany() {
+		return company;
 	}
 
-	public void setCompanyName(String companyName) {
-		this.companyName = companyName;
+	public void setCompany(String company) {
+		this.company = company;
 	}
 }

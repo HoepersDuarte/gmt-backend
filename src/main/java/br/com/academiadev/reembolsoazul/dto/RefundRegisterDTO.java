@@ -2,7 +2,7 @@ package br.com.academiadev.reembolsoazul.dto;
 
 import io.swagger.annotations.ApiModelProperty;
 
-public class RefundDTO {
+public class RefundRegisterDTO {
 
 	@ApiModelProperty(value = "Nome do reembolso", example = "Reembolso exemplo")
 	private String name;
@@ -16,9 +16,6 @@ public class RefundDTO {
 	@ApiModelProperty(value = "Nota fiscal do reembolso", example = "notafiscal.txt") // TODO implementar upload de
 																						// arquivos
 	private String file;
-
-	@ApiModelProperty(value = "Id do usuario relacionado ao reembolso", example = "1")
-	private Long user;
 
 	@ApiModelProperty(value = "Categoria do reembolso", example = "ALIMENTACAO")
 	private String refundCategory;
@@ -53,14 +50,6 @@ public class RefundDTO {
 
 	public void setFile(String file) {
 		this.file = file;
-	}
-
-	public Long getUser() {
-		return user;
-	}
-
-	public void setUser(Long user) {
-		this.user = user;
 	}
 
 	public String getRefundCategory() {

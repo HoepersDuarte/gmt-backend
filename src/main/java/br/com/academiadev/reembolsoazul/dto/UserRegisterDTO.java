@@ -14,7 +14,7 @@ public class UserRegisterDTO {
 	private String password;
 
 	@ApiModelProperty(value = "Codigo fornecido pela empresa", example = "codigoEmpresa")
-	private String companyCode;
+	private String company;
 
 	public String getName() {
 		return name;
@@ -40,11 +40,11 @@ public class UserRegisterDTO {
 		this.password = password;
 	}
 
-	public String getCompanyCode() {
-		return companyCode;
+	public String getCompany() {
+		return company;
 	}
 
-	public void setCompanyCode(String companyCode) {
-		this.companyCode = companyCode;
+	public void setCompany(String company) {
+		this.company = company;
 	}
 }
