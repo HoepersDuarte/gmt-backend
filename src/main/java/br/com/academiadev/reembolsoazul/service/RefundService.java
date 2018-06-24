@@ -4,6 +4,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import br.com.academiadev.reembolsoazul.converter.RefundRegisterConverter;
@@ -36,7 +39,8 @@ public class RefundService {
 	public void register(RefundRegisterDTO refundDTO) throws UserNotFoundException {
 		Refund refund = refundRegisterConverter.toEntity(refundDTO);
 		refund.setRefundStatus(RefundStatus.WAITING);
-		refund.setUser(findUser(refundDTO.getUser()));
+		refund.setUser(findUserByToken());
+		
 
 		refundRepository.save(refund);
 	}
@@ -47,13 +51,14 @@ public class RefundService {
 		}).collect(Collectors.toList());
 	}
 
-	private User findUser(Long userId) throws UserNotFoundException {
-		List<User> user = userRepository.findById(userId);
-		if (user.size() == 1) {
-			return user.get(0);
+	private User findUserByToken() throws UserNotFoundException {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		UserDetails userDetail = (UserDetails) authentication.getPrincipal();
+		User user = userRepository.findByEmail(userDetail.getUsername());
+		if(user != null) {
+			return user;
 		}
 		throw new UserNotFoundException();
-
 	}
 
 }

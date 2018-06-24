@@ -139,64 +139,7 @@ public class ReembolsoazulApplicationTests {
 		Assert.assertTrue(user.getUserType().equals(UserType.ROLE_ADMIN));
 		Assert.assertTrue(user.getCompany().getName().equals("Empresa 1"));
 	}
-
-	@Test
-	public void registerRefund() {
-		// register the company
-		CompanyRegisterDTO companyRegisterDTO1 = new CompanyRegisterDTO();
-		companyRegisterDTO1.setName("Empresa 1");
-		companyController.register(companyRegisterDTO1);
-
-		// get the admin code from the first company
-		List<Company> companies = (List<Company>) companyRepository.findByName("Empresa 1");
-		String userCodeCompany1 = companies.get(0).getCompanyUserCode();
-
-		// register the user
-		UserRegisterDTO userDTO = new UserRegisterDTO();
-		userDTO.setName("name1");
-		userDTO.setEmail("email2@example.com");
-		userDTO.setPassword("1aA+1234");
-		userDTO.setCompanyCode(userCodeCompany1);
-		try {
-			userController.register(userDTO);
-		} catch (CompanyNotFoundException e) {
-			e.printStackTrace();
-		} catch (InvalidPasswordFormatException e) {
-			e.printStackTrace();
-		} catch (InvalidEmailFormatException e) {
-			e.printStackTrace();
-		}
-
-		// get the user registered
-		User user = userRepository.findByEmail("email2@example.com");
-
-		// register the refund
-		RefundRegisterDTO refundDTO = new RefundRegisterDTO();
-		refundDTO.setDate("10/10/2010");
-		refundDTO.setFile("file");
-		refundDTO.setName("RefundName");
-		refundDTO.setRefundCategory("ALIMENTACAO");
-		refundDTO.setUser(user.getId());
-		refundDTO.setValue("1000");
-
-		try {
-			refundService.register(refundDTO);
-		} catch (UserNotFoundException e) {
-			e.printStackTrace();
-		}
-
-		// get the refund registered
-		Refund refund = ((List<Refund>) refundRepository.findByName("RefundName")).get(0);
-
-		Assert.assertTrue(refund.getName().equals("RefundName"));
-		Assert.assertTrue(refund.getValue().compareTo(new BigDecimal("1000")) == 0);
-		Assert.assertTrue(refund.getFile().equals("file"));
-		Assert.assertTrue(refund.getDate().equals(LocalDate.parse("10/10/2010", DateTimeFormatter.ofPattern("dd/MM/yyyy"))));
-		Assert.assertTrue(refund.getUser().getName().equals(user.getName()));
-		Assert.assertTrue(refund.getRefundCategory().equals(RefundCategory.ALIMENTACAO));
-		Assert.assertTrue(refund.getRefundStatus().equals(RefundStatus.WAITING));
-	}
-
+	
 	@Test
 	public void companyCodeGeneration() {
 		String companyName = "Empresa 1";

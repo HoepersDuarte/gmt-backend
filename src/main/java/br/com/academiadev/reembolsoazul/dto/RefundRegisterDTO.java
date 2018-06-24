@@ -17,9 +17,6 @@ public class RefundRegisterDTO {
 																						// arquivos
 	private String file;
 
-	@ApiModelProperty(value = "Id do usuario relacionado ao reembolso", example = "1")
-	private Long user;
-
 	@ApiModelProperty(value = "Categoria do reembolso", example = "ALIMENTACAO")
 	private String refundCategory;
 
@@ -53,14 +50,6 @@ public class RefundRegisterDTO {
 
 	public void setFile(String file) {
 		this.file = file;
-	}
-
-	public Long getUser() {
-		return user;
-	}
-
-	public void setUser(Long user) {
-		this.user = user;
 	}
 
 	public String getRefundCategory() {
