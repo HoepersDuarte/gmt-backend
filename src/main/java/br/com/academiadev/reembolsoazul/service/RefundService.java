@@ -1,5 +1,6 @@
 package br.com.academiadev.reembolsoazul.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -15,6 +16,7 @@ import br.com.academiadev.reembolsoazul.dto.RefundRegisterDTO;
 import br.com.academiadev.reembolsoazul.dto.RefundViewDTO;
 import br.com.academiadev.reembolsoazul.exception.UserNotFoundException;
 import br.com.academiadev.reembolsoazul.model.Refund;
+import br.com.academiadev.reembolsoazul.model.RefundCategory;
 import br.com.academiadev.reembolsoazul.model.RefundStatus;
 import br.com.academiadev.reembolsoazul.model.User;
 import br.com.academiadev.reembolsoazul.model.UserType;
@@ -61,6 +63,17 @@ public class RefundService {
 			}).collect(Collectors.toList());
 		}
 		throw new UserNotFoundException();
+	}
+	
+	public List<String> findAllCategories() {
+		RefundCategory[] values = RefundCategory.values();
+		List<String> categories = new ArrayList<String>();
+		
+		for(RefundCategory c : values) {
+			categories.add(c.toString());
+		}
+		
+		return categories;
 	}
 
 	private User findUserByToken() throws UserNotFoundException {
