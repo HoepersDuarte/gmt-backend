@@ -1,11 +1,6 @@
 package br.com.academiadev.reembolsoazul.reembolsoazul;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
-
-import javax.mail.MessagingException;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -18,24 +13,17 @@ import org.springframework.test.context.junit4.SpringRunner;
 import br.com.academiadev.reembolsoazul.controller.CompanyController;
 import br.com.academiadev.reembolsoazul.controller.UserController;
 import br.com.academiadev.reembolsoazul.dto.CompanyRegisterDTO;
-import br.com.academiadev.reembolsoazul.dto.RefundRegisterDTO;
 import br.com.academiadev.reembolsoazul.dto.UserCompanyRegisterDTO;
 import br.com.academiadev.reembolsoazul.dto.UserRegisterDTO;
 import br.com.academiadev.reembolsoazul.exception.CompanyNotFoundException;
 import br.com.academiadev.reembolsoazul.exception.InvalidEmailFormatException;
 import br.com.academiadev.reembolsoazul.exception.InvalidPasswordFormatException;
-import br.com.academiadev.reembolsoazul.exception.UserNotFoundException;
 import br.com.academiadev.reembolsoazul.model.Company;
-import br.com.academiadev.reembolsoazul.model.Refund;
-import br.com.academiadev.reembolsoazul.model.RefundCategory;
-import br.com.academiadev.reembolsoazul.model.RefundStatus;
 import br.com.academiadev.reembolsoazul.model.User;
 import br.com.academiadev.reembolsoazul.model.UserType;
 import br.com.academiadev.reembolsoazul.repository.CompanyRepository;
-import br.com.academiadev.reembolsoazul.repository.RefundRepository;
 import br.com.academiadev.reembolsoazul.repository.UserRepository;
 import br.com.academiadev.reembolsoazul.service.EmailService;
-import br.com.academiadev.reembolsoazul.service.RefundService;
 import br.com.academiadev.reembolsoazul.util.CompanyTokenHelper;
 
 @RunWith(SpringRunner.class)
@@ -53,12 +41,6 @@ public class ReembolsoazulApplicationTests {
 
 	@Autowired
 	private UserRepository userRepository;
-
-	@Autowired
-	private RefundService refundService;
-
-	@Autowired
-	private RefundRepository refundRepository;
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
@@ -139,7 +121,7 @@ public class ReembolsoazulApplicationTests {
 		Assert.assertTrue(user.getUserType().equals(UserType.ROLE_ADMIN));
 		Assert.assertTrue(user.getCompany().getName().equals("Empresa 1"));
 	}
-	
+
 	@Test
 	public void companyCodeGeneration() {
 		String companyName = "Empresa 1";
@@ -184,15 +166,15 @@ public class ReembolsoazulApplicationTests {
 		Assert.assertTrue(company.getName().equals("Empresa legal"));
 	}
 
-//	@Test
-//	public void sendEmailTest() {
-//		try {
-//			emailService.send("bluerefund@gmail.com", "Subject2", "Text2");
-//		} catch (MessagingException e) {
-//			e.printStackTrace();
-//			Assert.assertTrue(false);
-//		}
-//		Assert.assertTrue(true);
-//	}
+	// @Test
+	// public void sendEmailTest() {
+	// try {
+	// emailService.send("bluerefund@gmail.com", "Subject2", "Text2");
+	// } catch (MessagingException e) {
+	// e.printStackTrace();
+	// Assert.assertTrue(false);
+	// }
+	// Assert.assertTrue(true);
+	// }
 
 }
