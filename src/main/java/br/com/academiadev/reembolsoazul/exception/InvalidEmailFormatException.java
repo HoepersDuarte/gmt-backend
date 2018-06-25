@@ -1,11 +1,10 @@
 package br.com.academiadev.reembolsoazul.exception;
 
-public class InvalidEmailFormatException extends Exception {
-	
-	private static final long serialVersionUID = 1L;
-	private final String message = "Formato invalido de email";
+public class InvalidEmailFormatException extends APIException {
 
-	public String getMessage() {
-		return message;
-	};
+	private static final long serialVersionUID = 1L;
+
+	public InvalidEmailFormatException() {
+		super("Formato invalido de email", "");
+	}
 }

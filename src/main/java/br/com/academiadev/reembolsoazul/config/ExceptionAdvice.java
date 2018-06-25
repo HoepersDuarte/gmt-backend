@@ -8,6 +8,7 @@ import javax.persistence.NoResultException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -17,10 +18,12 @@ import br.com.academiadev.reembolsoazul.exception.APIException;
 import br.com.academiadev.reembolsoazul.exception.CompanyNotFoundException;
 import br.com.academiadev.reembolsoazul.exception.EmailAlreadyUsedException;
 import br.com.academiadev.reembolsoazul.exception.InvalidEmailFormatException;
+import br.com.academiadev.reembolsoazul.exception.InvalidPasswordFormatException;
 import br.com.academiadev.reembolsoazul.exception.RefundFromOtherCompanyException;
 import br.com.academiadev.reembolsoazul.exception.RefundNotFoundException;
 import br.com.academiadev.reembolsoazul.exception.UserNotFoundException;
 
+@ControllerAdvice
 public class ExceptionAdvice {
 	private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ExceptionAdvice.class);
 
@@ -64,7 +67,7 @@ public class ExceptionAdvice {
 		final Map<String, Object> errorMap = getMessageErrorMap(message, errorKey, httpStatus);
 		return new ResponseEntity<>(errorMap, httpStatus);
 	}
-	
+
 	@ExceptionHandler(value = EmailAlreadyUsedException.class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ResponseBody
@@ -73,7 +76,7 @@ public class ExceptionAdvice {
 		log.error(exception.getMessage(), exception);
 		return getDefaultErrorResponse(exception.getMessage(), HttpStatus.BAD_REQUEST);
 	}
-	
+
 	@ExceptionHandler(value = CompanyNotFoundException.class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ResponseBody
@@ -82,7 +85,7 @@ public class ExceptionAdvice {
 		log.error(exception.getMessage(), exception);
 		return getDefaultErrorResponse(exception.getMessage(), HttpStatus.BAD_REQUEST);
 	}
-	
+
 	@ExceptionHandler(value = InvalidEmailFormatException.class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ResponseBody
@@ -91,7 +94,16 @@ public class ExceptionAdvice {
 		log.error(exception.getMessage(), exception);
 		return getDefaultErrorResponse(exception.getMessage(), HttpStatus.BAD_REQUEST);
 	}
-	
+
+	@ExceptionHandler(value = InvalidPasswordFormatException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ResponseBody
+	public ResponseEntity<Map<String, Object>> handlePasswordFormatException(final Exception exception,
+			final WebRequest request) {
+		log.error(exception.getMessage(), exception);
+		return getDefaultErrorResponse(exception.getMessage(), HttpStatus.BAD_REQUEST);
+	}
+
 	@ExceptionHandler(value = RefundFromOtherCompanyException.class)
 	@ResponseStatus(HttpStatus.UNAUTHORIZED)
 	@ResponseBody
@@ -100,7 +112,7 @@ public class ExceptionAdvice {
 		log.error(exception.getMessage(), exception);
 		return getDefaultErrorResponse(exception.getMessage(), HttpStatus.UNAUTHORIZED);
 	}
-	
+
 	@ExceptionHandler(value = RefundNotFoundException.class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ResponseBody
@@ -109,7 +121,7 @@ public class ExceptionAdvice {
 		log.error(exception.getMessage(), exception);
 		return getDefaultErrorResponse(exception.getMessage(), HttpStatus.BAD_REQUEST);
 	}
-	
+
 	@ExceptionHandler(value = UserNotFoundException.class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ResponseBody

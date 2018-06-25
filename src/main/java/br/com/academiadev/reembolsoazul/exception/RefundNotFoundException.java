@@ -1,11 +1,11 @@
 package br.com.academiadev.reembolsoazul.exception;
 
-public class RefundNotFoundException extends Exception {
+public class RefundNotFoundException extends APIException {
 
 	private static final long serialVersionUID = 1L;
-	private final String message = "Reembolso nao encontrado";
 
-	public String getMessage() {
-		return message;
-	};
+	public RefundNotFoundException() {
+		super("Reembolso nao encontrado", "");
+	}
+
 }

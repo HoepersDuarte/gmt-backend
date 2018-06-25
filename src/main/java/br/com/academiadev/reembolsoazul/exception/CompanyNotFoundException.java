@@ -4,7 +4,7 @@ public class CompanyNotFoundException extends APIException {
 	private static final long serialVersionUID = 1L;
 
 	public CompanyNotFoundException() {
-		super("Empresa nao encontrada", "companyNotFoundKey");
+		super("Empresa nao encontrada", "");
 	}
-	
+
 }
