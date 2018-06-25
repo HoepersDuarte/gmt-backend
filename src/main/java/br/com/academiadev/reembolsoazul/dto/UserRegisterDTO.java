@@ -10,7 +10,7 @@ public class UserRegisterDTO {
 	@ApiModelProperty(value = "Email do usuario", example = "example@example.com.br")
 	private String email;
 
-	@ApiModelProperty(value = "Senha do usuario", example = "123456")
+	@ApiModelProperty(value = "Senha do usuario", example = "12345aA+")
 	private String password;
 
 	@ApiModelProperty(value = "Codigo fornecido pela empresa", example = "codigoEmpresa")

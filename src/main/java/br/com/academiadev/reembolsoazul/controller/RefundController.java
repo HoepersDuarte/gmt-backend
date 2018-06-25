@@ -35,45 +35,53 @@ public class RefundController {
 	private RefundService refundService;
 
 	@ApiOperation(value = "Cadastra um reembolso")
-	@ApiResponses(value = { @ApiResponse(code = 200, message = "Reembolso cadastrado com sucesso") })
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Reembolso cadastrado com sucesso"), //
+			@ApiResponse(code = 400, message = "Entrada invalida"), //
+	})
 	@ApiImplicitParams({ //
 			@ApiImplicitParam(name = "Authorization", value = "Authorization token", required = true, dataType = "string", paramType = "header") //
 	})
 	@PreAuthorize("hasRole('ROLE_COMMONUSER')")
 	@PostMapping("/")
-	public ResponseEntity<RefundRegisterDTO> register(@RequestBody RefundRegisterDTO refundDTO) throws UserNotFoundException {
+	public ResponseEntity<RefundRegisterDTO> register(@RequestBody RefundRegisterDTO refundDTO)
+			throws UserNotFoundException {
 		refundService.register(refundDTO);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
-	@ApiOperation(value = "Retorna todos os reembolsos cadastrados", response = RefundRegisterDTO[].class)
+	@ApiOperation(value = "Retorna todos os reembolsos cadastrados do usuario ou empresa relacionada", response = RefundRegisterDTO[].class)
 	@ApiImplicitParams({ //
 			@ApiImplicitParam(name = "Authorization", value = "Authorization token", required = true, dataType = "string", paramType = "header") //
 	})
-	@ApiResponses(value = { @ApiResponse(code = 200, message = "Lista recebida com sucesso") })
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Lista recebida com sucesso"), //
+			@ApiResponse(code = 400, message = "Entrada invalida"), //
+	})
 	@GetMapping("/")
 	public ResponseEntity<List<RefundViewDTO>> getAll() throws UserNotFoundException {
 		return new ResponseEntity<>(refundService.findAll(), HttpStatus.OK);
 	}
-	
+
 	@ApiOperation(value = "Retorna todos as categorias cadastradas", response = RefundRegisterDTO[].class)
 	@ApiImplicitParams({ //
 			@ApiImplicitParam(name = "Authorization", value = "Authorization token", required = true, dataType = "string", paramType = "header") //
 	})
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Lista recebida com sucesso") })
 	@GetMapping("/category")
-	public ResponseEntity<List<String>> getAllCategories() throws UserNotFoundException {
+	public ResponseEntity<List<String>> getAllCategories() {
 		return new ResponseEntity<>(refundService.findAllCategories(), HttpStatus.OK);
 	}
-	
+
 	@ApiOperation(value = "Altera o status dos reembolsos passados")
-	@ApiResponses(value = { @ApiResponse(code = 200, message = "Reembolso alterados com sucesso") })
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Reembolso alterados com sucesso"), //
+			@ApiResponse(code = 400, message = "Entrada invalida"), //
+	})
 	@ApiImplicitParams({ //
 			@ApiImplicitParam(name = "Authorization", value = "Authorization token", required = true, dataType = "string", paramType = "header") //
 	})
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@PostMapping("/statusAssign")
-	public ResponseEntity<RefundStatusAssignDTO> statusAssign(@RequestBody RefundStatusAssignDTO refundStatusAssignDTO) throws UserNotFoundException, RefundFromOtherCompanyException, RefundNotFoundException {
+	public ResponseEntity<RefundStatusAssignDTO> statusAssign(@RequestBody RefundStatusAssignDTO refundStatusAssignDTO)
+			throws UserNotFoundException, RefundFromOtherCompanyException, RefundNotFoundException {
 		refundService.statusAssign(refundStatusAssignDTO);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}

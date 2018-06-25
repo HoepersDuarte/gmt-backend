@@ -1,7 +1,5 @@
 package br.com.academiadev.reembolsoazul.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.academiadev.reembolsoazul.dto.CompanyRegisterDTO;
 import br.com.academiadev.reembolsoazul.dto.CompanyViewDTO;
+import br.com.academiadev.reembolsoazul.exception.UserNotFoundException;
 import br.com.academiadev.reembolsoazul.service.CompanyService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -37,15 +36,16 @@ public class CompanyController {
 		companyService.register(companyRegisterDTO);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
-
-	@ApiOperation(value = "Retorna todas as empresas cadastradas", response = CompanyViewDTO[].class)
-	@ApiResponses(value = { @ApiResponse(code = 200, message = "Lista recebida com sucesso") })
+	
+	@ApiOperation(value = "Retorna a empresa referente ao admin logado", response = CompanyViewDTO.class)
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Empresa retornada com sucesso") })
 	@ApiImplicitParams({ //
-			@ApiImplicitParam(name = "Authorization", value = "Authorization token", required = true, dataType = "string", paramType = "header") //
+		@ApiImplicitParam(name = "Authorization", value = "Authorization token", required = true, dataType = "string", paramType = "header") //
 	})
-	@GetMapping("/")
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
-	public ResponseEntity<List<CompanyViewDTO>> getAll() {
-		return new ResponseEntity<>(companyService.findAll(), HttpStatus.OK);
+	@GetMapping("/")
+	public ResponseEntity<CompanyViewDTO> getCompany() throws UserNotFoundException {
+		return new ResponseEntity<>(companyService.getCompany(), HttpStatus.OK);
 	}
+
 }

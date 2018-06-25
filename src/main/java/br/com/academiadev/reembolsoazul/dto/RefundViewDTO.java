@@ -13,18 +13,18 @@ public class RefundViewDTO {
 	@ApiModelProperty(value = "Data do reembolso", example = "01/01/2018")
 	private String date;
 
-	@ApiModelProperty(value = "Nota fiscal do reembolso", example = "notafiscal.txt")																			
+	@ApiModelProperty(value = "Nota fiscal do reembolso", example = "notafiscal.txt")
 	private String file;
 
-	@ApiModelProperty(value = "Id do usuario relacionado ao reembolso", example = "1")
+	@ApiModelProperty(value = "Nome do usuario relacionado ao reembolso", example = "Usuario exemplo")
 	private String user;
 
 	@ApiModelProperty(value = "Categoria do reembolso", example = "ALIMENTACAO")
 	private String refundCategory;
-	
+
 	@ApiModelProperty(value = "Status do reembolso", example = "ACCEPTED")
 	private String refundStatus;
-	
+
 	@ApiModelProperty(value = "Id do reembolso", example = "1")
 	private Long id;
 

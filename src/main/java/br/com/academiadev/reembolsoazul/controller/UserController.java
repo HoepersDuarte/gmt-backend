@@ -41,19 +41,25 @@ public class UserController {
 	private UserService userService;
 
 	@ApiOperation(value = "Cadastra um usuario")
-	@ApiResponses(value = { @ApiResponse(code = 200, message = "Usuario cadastrado com sucesso") })
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Usuario cadastrado com sucesso"), //
+			@ApiResponse(code = 400, message = "Entrada invalida"), //
+	})
 	@PostMapping("/")
 	public ResponseEntity<UserRegisterDTO> register(@RequestBody UserRegisterDTO userRegisterDTO)
-			throws CompanyNotFoundException, InvalidPasswordFormatException, InvalidEmailFormatException, EmailAlreadyUsedException {
+			throws CompanyNotFoundException, InvalidPasswordFormatException, InvalidEmailFormatException,
+			EmailAlreadyUsedException {
 		userService.save(userRegisterDTO);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 	@ApiOperation(value = "Cadastra um usuario e uma empresa")
-	@ApiResponses(value = { @ApiResponse(code = 200, message = "Usuario e empresa cadastrados com sucesso") })
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Usuario cadastrado com sucesso"), //
+			@ApiResponse(code = 400, message = "Entrada invalida"), //
+	})
 	@PostMapping("/newCompany")
 	public ResponseEntity<UserRegisterDTO> registerUserCompany(
-			@RequestBody UserCompanyRegisterDTO userCompanyRegisterDTO) throws CompanyNotFoundException, InvalidPasswordFormatException, InvalidEmailFormatException, EmailAlreadyUsedException {
+			@RequestBody UserCompanyRegisterDTO userCompanyRegisterDTO) throws CompanyNotFoundException,
+			InvalidPasswordFormatException, InvalidEmailFormatException, EmailAlreadyUsedException {
 		userService.saveUserCompany(userCompanyRegisterDTO);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
@@ -68,33 +74,38 @@ public class UserController {
 	public ResponseEntity<List<UserViewDTO>> getAll() {
 		return new ResponseEntity<>(userService.findAll(), HttpStatus.OK);
 	}
-	
+
 	@ApiOperation(value = "Retorna se um email esta disponivel", response = Boolean.class)
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Resposta recebida com sucesso") })
 	@PostMapping("/email")
 	public ResponseEntity<Boolean> verifyEmail(@RequestBody EmailVerificationDTO emailVerificationDTO) {
 		return new ResponseEntity<>(userService.emailCheckAvailability(emailVerificationDTO.getEmail()), HttpStatus.OK);
 	}
-	
+
 	@ApiOperation(value = "Manda um email para recuperar a senha")
-	@ApiResponses(value = { @ApiResponse(code = 200, message = "Email com link de recuperacao enviado com sucesso") })
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Email com link de recuperacao enviado com sucesso"), //
+			@ApiResponse(code = 400, message = "Entrada invalida"), //
+			@ApiResponse(code = 500, message = "Erro ao mandar a mensagem")//
+	})
 	@PostMapping("/forgotPassword")
-	public ResponseEntity<Boolean> forgotPassword(
-			@RequestBody EmailVerificationDTO EmailVerificationDTO) throws UserNotFoundException, MessagingException {
+	public ResponseEntity<Boolean> forgotPassword(@RequestBody EmailVerificationDTO EmailVerificationDTO)
+			throws UserNotFoundException, MessagingException {
 		userService.forgotPassword(EmailVerificationDTO.getEmail());
-		return new ResponseEntity<>(true, HttpStatus.OK);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
-	
+
 	@ApiOperation(value = "Redefine a senha")
-	@ApiResponses(value = { @ApiResponse(code = 200, message = "Senha redefinida com sucesso") })
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Senha redefinida com sucesso"), //
+			@ApiResponse(code = 400, message = "Entrada invalida"), //
+	})
 	@ApiImplicitParams({ //
-		@ApiImplicitParam(name = "Authorization", value = "Authorization token", required = true, dataType = "string", paramType = "header") //
+			@ApiImplicitParam(name = "Authorization", value = "Authorization token", required = true, dataType = "string", paramType = "header") //
 	})
 	@PostMapping("/redefinePassword")
-	public ResponseEntity<Boolean> redefinePassword(
-			@RequestBody PasswordDTO passwordDTO) throws UserNotFoundException, InvalidPasswordFormatException{
+	public ResponseEntity<Boolean> redefinePassword(@RequestBody PasswordDTO passwordDTO)
+			throws UserNotFoundException, InvalidPasswordFormatException {
 		userService.redefinePassword(passwordDTO.getPassword());
-		return new ResponseEntity<>(true, HttpStatus.OK);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 }
