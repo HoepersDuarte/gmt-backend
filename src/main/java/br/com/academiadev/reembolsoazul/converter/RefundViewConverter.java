@@ -14,7 +14,7 @@ public class RefundViewConverter implements Converter<Refund, RefundViewDTO> {
 		RefundViewDTO refundDTO = new RefundViewDTO();
 		refundDTO.setName(entity.getName());
 		refundDTO.setFile(entity.getFile());
-		refundDTO.setUser(entity.getUser().getId());
+		refundDTO.setUser(entity.getUser().getName());
 		refundDTO.setValue(entity.getValue().toString());
 		refundDTO.setId(entity.getId());
 		refundDTO.setRefundCategory(entity.getRefundCategory().toString());

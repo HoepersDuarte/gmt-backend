@@ -16,6 +16,7 @@ import br.com.academiadev.reembolsoazul.dto.CompanyRegisterDTO;
 import br.com.academiadev.reembolsoazul.dto.UserCompanyRegisterDTO;
 import br.com.academiadev.reembolsoazul.dto.UserRegisterDTO;
 import br.com.academiadev.reembolsoazul.exception.CompanyNotFoundException;
+import br.com.academiadev.reembolsoazul.exception.EmailAlreadyUsedException;
 import br.com.academiadev.reembolsoazul.exception.InvalidEmailFormatException;
 import br.com.academiadev.reembolsoazul.exception.InvalidPasswordFormatException;
 import br.com.academiadev.reembolsoazul.model.Company;
@@ -111,6 +112,8 @@ public class ReembolsoazulApplicationTests {
 			e.printStackTrace();
 		} catch (InvalidEmailFormatException e) {
 			e.printStackTrace();
+		} catch (EmailAlreadyUsedException e) {
+			e.printStackTrace();
 		}
 
 		// get the user registered
@@ -151,6 +154,8 @@ public class ReembolsoazulApplicationTests {
 		} catch (InvalidPasswordFormatException e) {
 			e.printStackTrace();
 		} catch (InvalidEmailFormatException e) {
+			e.printStackTrace();
+		} catch (EmailAlreadyUsedException e) {
 			e.printStackTrace();
 		}
 
