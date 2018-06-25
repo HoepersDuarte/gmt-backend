@@ -11,10 +11,10 @@ import br.com.academiadev.reembolsoazul.repository.EmailConfigRepository;
 
 @Service
 public class EmailService {
-	
+
 	@Autowired
 	EmailConfigRepository emailConfigRepository;
-	
+
 	@Autowired
 	JavaMailSender mailSender;
 

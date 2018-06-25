@@ -20,7 +20,6 @@ public class RefundViewConverter implements Converter<Refund, RefundViewDTO> {
 		refundDTO.setRefundCategory(entity.getRefundCategory().toString());
 		refundDTO.setRefundStatus(entity.getRefundStatus().toString());
 		refundDTO.setDate(entity.getDate().toString());
-		
 
 		return refundDTO;
 	}
@@ -29,6 +28,5 @@ public class RefundViewConverter implements Converter<Refund, RefundViewDTO> {
 	public Refund toEntity(RefundViewDTO dto) {
 		throw new NotYetImplementedException();
 	}
-
 
 }

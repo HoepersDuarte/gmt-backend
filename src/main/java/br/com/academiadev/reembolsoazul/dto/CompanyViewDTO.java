@@ -7,8 +7,10 @@ public class CompanyViewDTO {
 	@ApiModelProperty(value = "Nome da empresa", example = "Empresa 1")
 	private String name;
 
+	@ApiModelProperty(value = "Codigo para cadastro de novos admins", example = "123456789")
 	private String companyAdminCode;
 
+	@ApiModelProperty(value = "Codigo para cadastro de novos usuarios comuns", example = "123456789")
 	private String companyUserCode;
 
 	public String getName() {

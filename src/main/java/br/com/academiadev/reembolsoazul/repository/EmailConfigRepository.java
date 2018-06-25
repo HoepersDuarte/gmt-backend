@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import br.com.academiadev.reembolsoazul.model.EmailConfig;
 
 @Repository
-public interface EmailConfigRepository extends CrudRepository<EmailConfig, Long>{
+public interface EmailConfigRepository extends CrudRepository<EmailConfig, Long> {
 	public EmailConfig findByKey(String key);
 }

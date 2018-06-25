@@ -13,8 +13,7 @@ public class RefundRegisterDTO {
 	@ApiModelProperty(value = "Data do reembolso", example = "01/01/2018")
 	private String date;
 
-	@ApiModelProperty(value = "Nota fiscal do reembolso", example = "notafiscal.txt") // TODO implementar upload de
-																						// arquivos
+	@ApiModelProperty(value = "Nota fiscal do reembolso", example = "notafiscal.txt")
 	private String file;
 
 	@ApiModelProperty(value = "Categoria do reembolso", example = "ALIMENTACAO")

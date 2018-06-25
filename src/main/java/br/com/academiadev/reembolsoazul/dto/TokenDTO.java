@@ -1,8 +1,13 @@
 package br.com.academiadev.reembolsoazul.dto;
 
+import io.swagger.annotations.ApiModelProperty;
+
 public class TokenDTO {
 
+	@ApiModelProperty(value = "Token de acesso")
 	private String access_token;
+
+	@ApiModelProperty(value = "Tempo de expiracao do token", example = "3000")
 	private Long expires_in;
 
 	public String getAccess_token() {

@@ -60,30 +60,31 @@ public class UserService {
 
 	@Autowired
 	private UserCompanyToUserConverter userCompanyToUserConverter;
-	
+
 	@Autowired
 	private EmailService emailService;
-	
+
 	@Autowired
 	private TokenHelper tokenHelper;
 
-	public void save(UserRegisterDTO userRegisterDTO) throws CompanyNotFoundException, InvalidPasswordFormatException, InvalidEmailFormatException, EmailAlreadyUsedException {
+	public void save(UserRegisterDTO userRegisterDTO) throws CompanyNotFoundException, InvalidPasswordFormatException,
+			InvalidEmailFormatException, EmailAlreadyUsedException {
 		User user = userRegisterConverter.toEntity(userRegisterDTO);
 
 		getUserTypeAndCompany(user, userRegisterDTO.getCompany());
-		
-		if(!ValidationsHelper.passwordFormatValidation(userRegisterDTO.getPassword())) {
+
+		if (!ValidationsHelper.passwordFormatValidation(userRegisterDTO.getPassword())) {
 			throw new InvalidPasswordFormatException();
 		}
-		
-		if(!ValidationsHelper.emailValidation(userRegisterDTO.getEmail())) {
+
+		if (!ValidationsHelper.emailValidation(userRegisterDTO.getEmail())) {
 			throw new InvalidEmailFormatException();
 		}
-		
-		if(!emailCheckAvailability(user.getEmail())) {
+
+		if (!emailCheckAvailability(user.getEmail())) {
 			throw new EmailAlreadyUsedException();
 		}
-		
+
 		user.setPassword(passwordEncoder.encode(userRegisterDTO.getPassword()));
 		user.setLastPasswordChange(LocalDateTime.now());
 
@@ -91,7 +92,8 @@ public class UserService {
 	}
 
 	@Transactional
-	public void saveUserCompany(UserCompanyRegisterDTO userCompanyRegisterDTO) throws CompanyNotFoundException, InvalidPasswordFormatException, InvalidEmailFormatException, EmailAlreadyUsedException {
+	public void saveUserCompany(UserCompanyRegisterDTO userCompanyRegisterDTO) throws CompanyNotFoundException,
+			InvalidPasswordFormatException, InvalidEmailFormatException, EmailAlreadyUsedException {
 
 		CompanyRegisterDTO companyRegisterDTO = new CompanyRegisterDTO();
 		companyRegisterDTO.setName(userCompanyRegisterDTO.getCompany());
@@ -150,51 +152,48 @@ public class UserService {
 
 		throw new CompanyNotFoundException();
 	}
-	
+
 	public boolean emailCheckAvailability(String email) {
 		User findByEmail = userRepository.findByEmail(email);
-		if(findByEmail == null) {
+		if (findByEmail == null) {
 			return true;
 		}
 		return false;
 	}
-	
+
 	public boolean forgotPassword(String email) throws UserNotFoundException, MessagingException {
 		User user = userRepository.findByEmail(email);
-		
-		if(user == null) {
+
+		if (user == null) {
 			throw new UserNotFoundException();
 		}
-		
-		
-		
+
 		String token = tokenHelper.generateToken(user.getEmail(), user.getUserType().toString(),
 				user.getCompany().getName(), null);
-		
-		
-		String text = "http://localhost:4200/#/trocar-senha"+token;
-		
+
+		String text = "http://localhost:4200/#/trocar-senha" + token;
+
 		emailService.send(email, "Recuperar senha - ReembolsoAzul", text);
 		return true;
 	}
-	
+
 	public boolean redefinePassword(String newPassword) throws UserNotFoundException, InvalidPasswordFormatException {
-		if(!ValidationsHelper.passwordFormatValidation(newPassword)) {
+		if (!ValidationsHelper.passwordFormatValidation(newPassword)) {
 			throw new InvalidPasswordFormatException();
 		}
-		
+
 		User user = findUserByToken();
 		user.setLastPasswordChange(LocalDateTime.now());
 		user.setPassword(passwordEncoder.encode(newPassword));
 		userRepository.save(user);
 		return true;
 	}
-	
+
 	public User findUserByToken() throws UserNotFoundException {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		UserDetails userDetail = (UserDetails) authentication.getPrincipal();
 		User user = userRepository.findByEmail(userDetail.getUsername());
-		if(user != null) {
+		if (user != null) {
 			return user;
 		}
 		throw new UserNotFoundException();

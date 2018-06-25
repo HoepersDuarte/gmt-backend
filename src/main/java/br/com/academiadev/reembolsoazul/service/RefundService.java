@@ -30,13 +30,13 @@ public class RefundService {
 
 	@Autowired
 	private RefundRegisterConverter refundRegisterConverter;
-	
+
 	@Autowired
 	private RefundViewConverter refundViewConverter;
 
 	@Autowired
 	private RefundRepository refundRepository;
-	
+
 	@Autowired
 	private UserService userService;
 
@@ -44,49 +44,49 @@ public class RefundService {
 		Refund refund = refundRegisterConverter.toEntity(refundDTO);
 		refund.setRefundStatus(RefundStatus.WAITING);
 		refund.setUser(userService.findUserByToken());
-		
 
 		refundRepository.save(refund);
 	}
 
 	public List<RefundViewDTO> findAll() throws UserNotFoundException {
-		
+
 		User user = userService.findUserByToken();
 		UserType userType = user.getUserType();
-		
-		if(userType == UserType.ROLE_ADMIN) {
+
+		if (userType == UserType.ROLE_ADMIN) {
 			return Util.toList(refundRepository.findByUser_Company(user.getCompany())).stream().map(e -> {
 				return refundViewConverter.toDTO(e);
 			}).collect(Collectors.toList());
-		}else if(userType == UserType.ROLE_COMMONUSER){
+		} else if (userType == UserType.ROLE_COMMONUSER) {
 			return Util.toList(refundRepository.findByUser(user)).stream().map(e -> {
 				return refundViewConverter.toDTO(e);
 			}).collect(Collectors.toList());
 		}
 		throw new UserNotFoundException();
 	}
-	
+
 	public List<String> findAllCategories() {
 		RefundCategory[] values = RefundCategory.values();
 		List<String> categories = new ArrayList<String>();
-		
-		for(RefundCategory c : values) {
+
+		for (RefundCategory c : values) {
 			categories.add(c.toString());
 		}
-		
+
 		return categories;
 	}
-	
+
 	@Transactional
-	public void statusAssign(RefundStatusAssignDTO refundStatusAssignDTO) throws UserNotFoundException, RefundFromOtherCompanyException, RefundNotFoundException {
+	public void statusAssign(RefundStatusAssignDTO refundStatusAssignDTO)
+			throws UserNotFoundException, RefundFromOtherCompanyException, RefundNotFoundException {
 		User companyAdmin = userService.findUserByToken();
-		
-		for(Long id: refundStatusAssignDTO.getRefunds()) {
+
+		for (Long id : refundStatusAssignDTO.getRefunds()) {
 			Refund refund = refundRepository.findById(id);
-			if(refund == null) {
+			if (refund == null) {
 				throw new RefundNotFoundException();
 			}
-			if(refund.getUser().getCompany() != companyAdmin.getCompany()) {
+			if (refund.getUser().getCompany() != companyAdmin.getCompany()) {
 				throw new RefundFromOtherCompanyException();
 			}
 			refund.setRefundStatus(RefundStatus.valueOf(refundStatusAssignDTO.getStatus()));
