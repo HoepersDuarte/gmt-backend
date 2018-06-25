@@ -15,6 +15,12 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.WebRequest;
 
 import br.com.academiadev.reembolsoazul.exception.APIException;
+import br.com.academiadev.reembolsoazul.exception.CompanyNotFoundException;
+import br.com.academiadev.reembolsoazul.exception.EmailAlreadyUsedException;
+import br.com.academiadev.reembolsoazul.exception.InvalidEmailFormatException;
+import br.com.academiadev.reembolsoazul.exception.RefundFromOtherCompanyException;
+import br.com.academiadev.reembolsoazul.exception.RefundNotFoundException;
+import br.com.academiadev.reembolsoazul.exception.UserNotFoundException;
 
 public class ExceptionAdvice {
 	private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ExceptionAdvice.class);
@@ -59,18 +65,67 @@ public class ExceptionAdvice {
 		final Map<String, Object> errorMap = getMessageErrorMap(message, errorKey, httpStatus);
 		return new ResponseEntity<>(errorMap, httpStatus);
 	}
+	
+	@ExceptionHandler(value = EmailAlreadyUsedException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ResponseBody
+	public ResponseEntity<Map<String, Object>> handleEmailAlreadyUsedException(final Exception exception,
+			final WebRequest request) {
+		log.error(exception.getMessage(), exception);
+		return getDefaultErrorResponse(exception.getMessage(), HttpStatus.BAD_REQUEST);
+	}
+	
+	@ExceptionHandler(value = CompanyNotFoundException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ResponseBody
+	public ResponseEntity<Map<String, Object>> handleCompanyNotFoundException(final Exception exception,
+			final WebRequest request) {
+		log.error(exception.getMessage(), exception);
+		return getDefaultErrorResponse(exception.getMessage(), HttpStatus.BAD_REQUEST);
+	}
+	
+	@ExceptionHandler(value = InvalidEmailFormatException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ResponseBody
+	public ResponseEntity<Map<String, Object>> handleEmailInvalidFormatException(final Exception exception,
+			final WebRequest request) {
+		log.error(exception.getMessage(), exception);
+		return getDefaultErrorResponse(exception.getMessage(), HttpStatus.BAD_REQUEST);
+	}
+	
+	@ExceptionHandler(value = RefundFromOtherCompanyException.class)
+	@ResponseStatus(HttpStatus.UNAUTHORIZED)
+	@ResponseBody
+	public ResponseEntity<Map<String, Object>> handleRefundFromOtherCompanyException(final Exception exception,
+			final WebRequest request) {
+		log.error(exception.getMessage(), exception);
+		return getDefaultErrorResponse(exception.getMessage(), HttpStatus.UNAUTHORIZED);
+	}
+	
+	@ExceptionHandler(value = RefundNotFoundException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ResponseBody
+	public ResponseEntity<Map<String, Object>> handleRefundNotFoundException(final Exception exception,
+			final WebRequest request) {
+		log.error(exception.getMessage(), exception);
+		return getDefaultErrorResponse(exception.getMessage(), HttpStatus.BAD_REQUEST);
+	}
+	
+	@ExceptionHandler(value = UserNotFoundException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ResponseBody
+	public ResponseEntity<Map<String, Object>> handleUserNotFoundException(final Exception exception,
+			final WebRequest request) {
+		log.error(exception.getMessage(), exception);
+		return getDefaultErrorResponse(exception.getMessage(), HttpStatus.BAD_REQUEST);
+	}
 
 	private Map<String, Object> getMessageErrorMap(String message, String errorKey, HttpStatus httpStatus) {
 		final Map<String, Object> map = new LinkedHashMap<>();
 		map.put("timestamp", System.currentTimeMillis());
 		map.put("status", httpStatus.value());
-		map.put("message", message);
+		map.put("message2", message);
 		map.put("errorKey", errorKey);
-
-		Map<String, Object> formReativo = new HashMap<>();
-		formReativo.put("usuarioUnico", true);
-		formReativo.put("senhaInvalida", true);
-		map.put("form", formReativo);
 		return map;
 	}
 
