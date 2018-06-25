@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.academiadev.reembolsoazul.dto.EmailVerificationDTO;
+import br.com.academiadev.reembolsoazul.dto.PasswordDTO;
 import br.com.academiadev.reembolsoazul.dto.UserCompanyRegisterDTO;
 import br.com.academiadev.reembolsoazul.dto.UserRegisterDTO;
 import br.com.academiadev.reembolsoazul.dto.UserViewDTO;
@@ -79,8 +80,20 @@ public class UserController {
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Email com link de recuperacao enviado com sucesso") })
 	@PostMapping("/forgotPassword")
 	public ResponseEntity<Boolean> forgotPassword(
-			@RequestBody EmailVerificationDTO EmailVerificationDTO) throws CompanyNotFoundException, InvalidPasswordFormatException, InvalidEmailFormatException, EmailAlreadyUsedException, UserNotFoundException, MessagingException {
+			@RequestBody EmailVerificationDTO EmailVerificationDTO) throws UserNotFoundException, MessagingException {
 		userService.forgotPassword(EmailVerificationDTO.getEmail());
+		return new ResponseEntity<>(true, HttpStatus.OK);
+	}
+	
+	@ApiOperation(value = "Redefine a senha")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Senha redefinida com sucesso") })
+	@ApiImplicitParams({ //
+		@ApiImplicitParam(name = "Authorization", value = "Authorization token", required = true, dataType = "string", paramType = "header") //
+	})
+	@PostMapping("/redefinePassword")
+	public ResponseEntity<Boolean> redefinePassword(
+			@RequestBody PasswordDTO passwordDTO) throws UserNotFoundException, InvalidPasswordFormatException{
+		userService.redefinePassword(passwordDTO.getPassword());
 		return new ResponseEntity<>(true, HttpStatus.OK);
 	}
 

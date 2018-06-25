@@ -9,6 +9,9 @@ import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -173,6 +176,28 @@ public class UserService {
 		
 		emailService.send(email, "Recuperar senha - ReembolsoAzul", text);
 		return true;
+	}
+	
+	public boolean redefinePassword(String newPassword) throws UserNotFoundException, InvalidPasswordFormatException {
+		if(!ValidationsHelper.passwordFormatValidation(newPassword)) {
+			throw new InvalidPasswordFormatException();
+		}
+		
+		User user = findUserByToken();
+		user.setLastPasswordChange(LocalDateTime.now());
+		user.setPassword(passwordEncoder.encode(newPassword));
+		userRepository.save(user);
+		return true;
+	}
+	
+	public User findUserByToken() throws UserNotFoundException {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		UserDetails userDetail = (UserDetails) authentication.getPrincipal();
+		User user = userRepository.findByEmail(userDetail.getUsername());
+		if(user != null) {
+			return user;
+		}
+		throw new UserNotFoundException();
 	}
 
 }
