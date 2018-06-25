@@ -1,6 +1,5 @@
 package br.com.academiadev.reembolsoazul.config;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -124,7 +123,7 @@ public class ExceptionAdvice {
 		final Map<String, Object> map = new LinkedHashMap<>();
 		map.put("timestamp", System.currentTimeMillis());
 		map.put("status", httpStatus.value());
-		map.put("message2", message);
+		map.put("message", message);
 		map.put("errorKey", errorKey);
 		return map;
 	}
