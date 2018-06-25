@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.mail.MessagingException;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import br.com.academiadev.reembolsoazul.config.jwt.TokenHelper;
 import br.com.academiadev.reembolsoazul.converter.UserCompanyToUserConverter;
 import br.com.academiadev.reembolsoazul.converter.UserRegisterConverter;
 import br.com.academiadev.reembolsoazul.converter.UserViewConverter;
@@ -23,6 +25,7 @@ import br.com.academiadev.reembolsoazul.exception.CompanyNotFoundException;
 import br.com.academiadev.reembolsoazul.exception.EmailAlreadyUsedException;
 import br.com.academiadev.reembolsoazul.exception.InvalidEmailFormatException;
 import br.com.academiadev.reembolsoazul.exception.InvalidPasswordFormatException;
+import br.com.academiadev.reembolsoazul.exception.UserNotFoundException;
 import br.com.academiadev.reembolsoazul.model.Company;
 import br.com.academiadev.reembolsoazul.model.User;
 import br.com.academiadev.reembolsoazul.model.UserType;
@@ -54,6 +57,12 @@ public class UserService {
 
 	@Autowired
 	private UserCompanyToUserConverter userCompanyToUserConverter;
+	
+	@Autowired
+	private EmailService emailService;
+	
+	@Autowired
+	private TokenHelper tokenHelper;
 
 	public void save(UserRegisterDTO userRegisterDTO) throws CompanyNotFoundException, InvalidPasswordFormatException, InvalidEmailFormatException, EmailAlreadyUsedException {
 		User user = userRegisterConverter.toEntity(userRegisterDTO);
@@ -145,6 +154,25 @@ public class UserService {
 			return true;
 		}
 		return false;
+	}
+	
+	public boolean forgotPassword(String email) throws UserNotFoundException, MessagingException {
+		User user = userRepository.findByEmail(email);
+		
+		if(user == null) {
+			throw new UserNotFoundException();
+		}
+		
+		
+		
+		String token = tokenHelper.generateToken(user.getEmail(), user.getUserType().toString(),
+				user.getCompany().getName(), null);
+		
+		
+		String text = "http://localhost:4200/redefinirSenha{"+token+"}";
+		
+		emailService.send(email, "Recuperar senha - ReembolsoAzul", text);
+		return true;
 	}
 
 }

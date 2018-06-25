@@ -2,6 +2,8 @@ package br.com.academiadev.reembolsoazul.controller;
 
 import java.util.List;
 
+import javax.mail.MessagingException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +22,7 @@ import br.com.academiadev.reembolsoazul.exception.CompanyNotFoundException;
 import br.com.academiadev.reembolsoazul.exception.EmailAlreadyUsedException;
 import br.com.academiadev.reembolsoazul.exception.InvalidEmailFormatException;
 import br.com.academiadev.reembolsoazul.exception.InvalidPasswordFormatException;
+import br.com.academiadev.reembolsoazul.exception.UserNotFoundException;
 import br.com.academiadev.reembolsoazul.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -70,6 +73,15 @@ public class UserController {
 	@PostMapping("/email")
 	public ResponseEntity<Boolean> verifyEmail(@RequestBody EmailVerificationDTO emailVerificationDTO) {
 		return new ResponseEntity<>(userService.emailCheckAvailability(emailVerificationDTO.getEmail()), HttpStatus.OK);
+	}
+	
+	@ApiOperation(value = "Manda um email para recuperar a senha")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Email com link de recuperacao enviado com sucesso") })
+	@PostMapping("/forgotPassword")
+	public ResponseEntity<Boolean> forgotPassword(
+			@RequestBody EmailVerificationDTO EmailVerificationDTO) throws CompanyNotFoundException, InvalidPasswordFormatException, InvalidEmailFormatException, EmailAlreadyUsedException, UserNotFoundException, MessagingException {
+		userService.forgotPassword(EmailVerificationDTO.getEmail());
+		return new ResponseEntity<>(true, HttpStatus.OK);
 	}
 
 }
