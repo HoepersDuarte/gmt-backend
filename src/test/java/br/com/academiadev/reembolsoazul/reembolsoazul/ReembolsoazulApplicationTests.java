@@ -124,6 +124,56 @@ public class ReembolsoazulApplicationTests {
 		Assert.assertTrue(user.getUserType().equals(UserType.ROLE_ADMIN));
 		Assert.assertTrue(user.getCompany().getName().equals("Empresa 1"));
 	}
+	
+	@Test
+	public void register2UsersWithTheSameEmail() {
+		// register company 1
+		CompanyRegisterDTO companyRegisterDTO1 = new CompanyRegisterDTO();
+		companyRegisterDTO1.setName("Empresa 1");
+		companyController.register(companyRegisterDTO1);
+
+		// get the admin code from the first company
+		List<Company> companies = (List<Company>) companyRepository.findByName("Empresa 1");
+		String userCodeCompany1 = companies.get(0).getCompanyUserCode();
+
+		// register the user 1
+		UserRegisterDTO userRegisterDTO = new UserRegisterDTO();
+		userRegisterDTO.setName("name1");
+		userRegisterDTO.setEmail("email1@example.com");
+		userRegisterDTO.setPassword("1aA+1234");
+		userRegisterDTO.setCompany(userCodeCompany1);
+		try {
+			userController.register(userRegisterDTO);
+		} catch (CompanyNotFoundException e) {
+			e.printStackTrace();
+		} catch (InvalidPasswordFormatException e) {
+			e.printStackTrace();
+		} catch (InvalidEmailFormatException e) {
+			e.printStackTrace();
+		} catch (EmailAlreadyUsedException e) {
+			e.printStackTrace();
+		}
+		
+		// register the user 2
+		userRegisterDTO = new UserRegisterDTO();
+		userRegisterDTO.setName("name2");
+		userRegisterDTO.setEmail("email1@example.com");
+		userRegisterDTO.setPassword("1aA+1234");
+		userRegisterDTO.setCompany(userCodeCompany1);
+		try {
+			userController.register(userRegisterDTO);
+		} catch (CompanyNotFoundException e) {
+			e.printStackTrace();
+		} catch (InvalidPasswordFormatException e) {
+			e.printStackTrace();
+		} catch (InvalidEmailFormatException e) {
+			e.printStackTrace();
+		} catch (EmailAlreadyUsedException e) {
+			Assert.assertTrue(true);
+			return;
+		}
+		Assert.assertTrue(false);
+	}
 
 	@Test
 	public void companyCodeGeneration() {
