@@ -9,8 +9,6 @@ spring:
     password: passdb
   jpa:
     generate-ddl: true
-    hibernate:
-        ddl-auto : create
   profiles:
     active: dev
 server:
