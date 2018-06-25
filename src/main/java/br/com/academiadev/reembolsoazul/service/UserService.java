@@ -172,7 +172,7 @@ public class UserService {
 				user.getCompany().getName(), null);
 		
 		
-		String text = "http://localhost:4200/redefinirSenha{"+token+"}";
+		String text = "http://localhost:4200/#/trocar-senha"+token;
 		
 		emailService.send(email, "Recuperar senha - ReembolsoAzul", text);
 		return true;
