@@ -36,7 +36,7 @@ public class RefundController {
 
 	@ApiOperation(value = "Cadastra um reembolso")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Reembolso cadastrado com sucesso"), //
-			@ApiResponse(code = 400, message = "Usuario nao encontrado")//
+			@ApiResponse(code = 400, message = "Entrada invalida"), //
 	})
 	@ApiImplicitParams({ //
 			@ApiImplicitParam(name = "Authorization", value = "Authorization token", required = true, dataType = "string", paramType = "header") //
@@ -54,7 +54,7 @@ public class RefundController {
 			@ApiImplicitParam(name = "Authorization", value = "Authorization token", required = true, dataType = "string", paramType = "header") //
 	})
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Lista recebida com sucesso"), //
-			@ApiResponse(code = 400, message = "Usuario nao encontrado")//
+			@ApiResponse(code = 400, message = "Entrada invalida"), //
 	})
 	@GetMapping("/")
 	public ResponseEntity<List<RefundViewDTO>> getAll() throws UserNotFoundException {
@@ -73,9 +73,7 @@ public class RefundController {
 
 	@ApiOperation(value = "Altera o status dos reembolsos passados")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Reembolso alterados com sucesso"), //
-			@ApiResponse(code = 400, message = "Usuario nao encontrado"), //
-			@ApiResponse(code = 400, message = "Reembolso pertence a outra empresa"), //
-			@ApiResponse(code = 400, message = "Reembolso nao encontrado")//
+			@ApiResponse(code = 400, message = "Entrada invalida"), //
 	})
 	@ApiImplicitParams({ //
 			@ApiImplicitParam(name = "Authorization", value = "Authorization token", required = true, dataType = "string", paramType = "header") //

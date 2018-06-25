@@ -42,10 +42,7 @@ public class UserController {
 
 	@ApiOperation(value = "Cadastra um usuario")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Usuario cadastrado com sucesso"), //
-			@ApiResponse(code = 400, message = "Empresa nao encontrada"), //
-			@ApiResponse(code = 400, message = "Formato de senha invalido"), //
-			@ApiResponse(code = 200, message = "Formato de email invalido"), //
-			@ApiResponse(code = 200, message = "Email ja utilizado")//
+			@ApiResponse(code = 400, message = "Entrada invalida"), //
 	})
 	@PostMapping("/")
 	public ResponseEntity<UserRegisterDTO> register(@RequestBody UserRegisterDTO userRegisterDTO)
@@ -57,10 +54,7 @@ public class UserController {
 
 	@ApiOperation(value = "Cadastra um usuario e uma empresa")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Usuario cadastrado com sucesso"), //
-			@ApiResponse(code = 400, message = "Empresa nao encontrada"), //
-			@ApiResponse(code = 400, message = "Formato de senha invalido"), //
-			@ApiResponse(code = 200, message = "Formato de email invalido"), //
-			@ApiResponse(code = 200, message = "Email ja utilizado")//
+			@ApiResponse(code = 400, message = "Entrada invalida"), //
 	})
 	@PostMapping("/newCompany")
 	public ResponseEntity<UserRegisterDTO> registerUserCompany(
@@ -90,7 +84,7 @@ public class UserController {
 
 	@ApiOperation(value = "Manda um email para recuperar a senha")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Email com link de recuperacao enviado com sucesso"), //
-			@ApiResponse(code = 400, message = "Usuario nao encontrado"), //
+			@ApiResponse(code = 400, message = "Entrada invalida"), //
 			@ApiResponse(code = 500, message = "Erro ao mandar a mensagem")//
 	})
 	@PostMapping("/forgotPassword")
@@ -102,8 +96,7 @@ public class UserController {
 
 	@ApiOperation(value = "Redefine a senha")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Senha redefinida com sucesso"), //
-			@ApiResponse(code = 400, message = "Usuario nao encontrado"), //
-			@ApiResponse(code = 400, message = "Formato de senha invalido")//
+			@ApiResponse(code = 400, message = "Entrada invalida"), //
 	})
 	@ApiImplicitParams({ //
 			@ApiImplicitParam(name = "Authorization", value = "Authorization token", required = true, dataType = "string", paramType = "header") //

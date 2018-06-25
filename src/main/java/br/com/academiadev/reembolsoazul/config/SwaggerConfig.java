@@ -24,7 +24,9 @@ public class SwaggerConfig {
 	}
 
 	private ApiInfo apiInfo() {
-		return new ApiInfo("titulo", "descricao", "versao", "termos", null, "License", "licenseUrl", new ArrayList<>());
+		String descricao = "API com todos os endpoints utilizados na aplicacao ReembolsoAzul";
+		return new ApiInfo("API ReembolsoAzul", descricao, "v1", "termos", null, "License", "MIT License",
+				new ArrayList<>());
 	}
 
 }
