@@ -13,7 +13,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.academiadev.reembolsoazul.dto.RefundRegisterDTO;
+import br.com.academiadev.reembolsoazul.dto.RefundStatusAssignDTO;
 import br.com.academiadev.reembolsoazul.dto.RefundViewDTO;
+import br.com.academiadev.reembolsoazul.exception.RefundFromOtherCompanyException;
+import br.com.academiadev.reembolsoazul.exception.RefundNotFoundException;
 import br.com.academiadev.reembolsoazul.exception.UserNotFoundException;
 import br.com.academiadev.reembolsoazul.service.RefundService;
 import io.swagger.annotations.Api;
@@ -61,6 +64,18 @@ public class RefundController {
 	@GetMapping("/category")
 	public ResponseEntity<List<String>> getAllCategories() throws UserNotFoundException {
 		return new ResponseEntity<>(refundService.findAllCategories(), HttpStatus.OK);
+	}
+	
+	@ApiOperation(value = "Altera o status dos reembolsos passados")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Reembolso alterados com sucesso") })
+	@ApiImplicitParams({ //
+			@ApiImplicitParam(name = "Authorization", value = "Authorization token", required = true, dataType = "string", paramType = "header") //
+	})
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	@PostMapping("/statusAssign")
+	public ResponseEntity<RefundStatusAssignDTO> statusAssign(@RequestBody RefundStatusAssignDTO refundStatusAssignDTO) throws UserNotFoundException, RefundFromOtherCompanyException, RefundNotFoundException {
+		refundService.statusAssign(refundStatusAssignDTO);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 }

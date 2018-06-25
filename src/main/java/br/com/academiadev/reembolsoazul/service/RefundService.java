@@ -4,13 +4,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.academiadev.reembolsoazul.converter.RefundRegisterConverter;
 import br.com.academiadev.reembolsoazul.converter.RefundViewConverter;
 import br.com.academiadev.reembolsoazul.dto.RefundRegisterDTO;
+import br.com.academiadev.reembolsoazul.dto.RefundStatusAssignDTO;
 import br.com.academiadev.reembolsoazul.dto.RefundViewDTO;
+import br.com.academiadev.reembolsoazul.exception.RefundFromOtherCompanyException;
+import br.com.academiadev.reembolsoazul.exception.RefundNotFoundException;
 import br.com.academiadev.reembolsoazul.exception.UserNotFoundException;
 import br.com.academiadev.reembolsoazul.model.Refund;
 import br.com.academiadev.reembolsoazul.model.RefundCategory;
@@ -70,6 +75,23 @@ public class RefundService {
 		}
 		
 		return categories;
+	}
+	
+	@Transactional
+	public void statusAssign(RefundStatusAssignDTO refundStatusAssignDTO) throws UserNotFoundException, RefundFromOtherCompanyException, RefundNotFoundException {
+		User companyAdmin = userService.findUserByToken();
+		
+		for(Long id: refundStatusAssignDTO.getRefunds()) {
+			Refund refund = refundRepository.findById(id);
+			if(refund == null) {
+				throw new RefundNotFoundException();
+			}
+			if(refund.getUser().getCompany() != companyAdmin.getCompany()) {
+				throw new RefundFromOtherCompanyException();
+			}
+			refund.setRefundStatus(RefundStatus.valueOf(refundStatusAssignDTO.getStatus()));
+			refundRepository.save(refund);
+		}
 	}
 
 }
