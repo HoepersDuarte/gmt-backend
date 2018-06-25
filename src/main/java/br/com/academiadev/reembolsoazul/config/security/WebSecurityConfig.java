@@ -67,6 +67,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.antMatchers("/auth/isauth").permitAll()//
 				.antMatchers(HttpMethod.POST, "/company/**").permitAll()//
 				.antMatchers(HttpMethod.POST, "/user/**").permitAll()//
+				.antMatchers(HttpMethod.GET, "/user/email").permitAll()//
 				.antMatchers("/management/**").permitAll()//
 				.anyRequest().authenticated().and()//
 				.addFilterBefore(new TokenFilter(tokenHelper, jwtUserDetailsService), BasicAuthenticationFilter.class);

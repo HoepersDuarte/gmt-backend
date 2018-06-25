@@ -20,6 +20,7 @@ import br.com.academiadev.reembolsoazul.dto.UserCompanyRegisterDTO;
 import br.com.academiadev.reembolsoazul.dto.UserRegisterDTO;
 import br.com.academiadev.reembolsoazul.dto.UserViewDTO;
 import br.com.academiadev.reembolsoazul.exception.CompanyNotFoundException;
+import br.com.academiadev.reembolsoazul.exception.EmailAlreadyUsedException;
 import br.com.academiadev.reembolsoazul.exception.InvalidEmailFormatException;
 import br.com.academiadev.reembolsoazul.exception.InvalidPasswordFormatException;
 import br.com.academiadev.reembolsoazul.model.Company;
@@ -54,7 +55,7 @@ public class UserService {
 	@Autowired
 	private UserCompanyToUserConverter userCompanyToUserConverter;
 
-	public void save(UserRegisterDTO userRegisterDTO) throws CompanyNotFoundException, InvalidPasswordFormatException, InvalidEmailFormatException {
+	public void save(UserRegisterDTO userRegisterDTO) throws CompanyNotFoundException, InvalidPasswordFormatException, InvalidEmailFormatException, EmailAlreadyUsedException {
 		User user = userRegisterConverter.toEntity(userRegisterDTO);
 
 		getUserTypeAndCompany(user, userRegisterDTO.getCompany());
@@ -66,6 +67,11 @@ public class UserService {
 		if(!ValidationsHelper.emailValidation(userRegisterDTO.getEmail())) {
 			throw new InvalidEmailFormatException();
 		}
+		
+		if(!emailCheckAvailability(user.getEmail())) {
+			throw new EmailAlreadyUsedException();
+		}
+		
 		user.setPassword(passwordEncoder.encode(userRegisterDTO.getPassword()));
 		user.setLastPasswordChange(LocalDateTime.now());
 
@@ -73,7 +79,7 @@ public class UserService {
 	}
 
 	@Transactional
-	public void saveUserCompany(UserCompanyRegisterDTO userCompanyRegisterDTO) throws CompanyNotFoundException, InvalidPasswordFormatException, InvalidEmailFormatException {
+	public void saveUserCompany(UserCompanyRegisterDTO userCompanyRegisterDTO) throws CompanyNotFoundException, InvalidPasswordFormatException, InvalidEmailFormatException, EmailAlreadyUsedException {
 
 		CompanyRegisterDTO companyRegisterDTO = new CompanyRegisterDTO();
 		companyRegisterDTO.setName(userCompanyRegisterDTO.getCompany());
@@ -131,6 +137,14 @@ public class UserService {
 		}
 
 		throw new CompanyNotFoundException();
+	}
+	
+	public boolean emailCheckAvailability(String email) {
+		User findByEmail = userRepository.findByEmail(email);
+		if(findByEmail == null) {
+			return true;
+		}
+		return false;
 	}
 
 }
