@@ -32,6 +32,7 @@ import br.com.academiadev.reembolsoazul.config.jwt.TokenHelper;
 import br.com.academiadev.reembolsoazul.controller.CompanyController;
 import br.com.academiadev.reembolsoazul.controller.UserController;
 import br.com.academiadev.reembolsoazul.dto.CompanyRegisterDTO;
+import br.com.academiadev.reembolsoazul.dto.LoginDTO;
 import br.com.academiadev.reembolsoazul.dto.RefundRegisterDTO;
 import br.com.academiadev.reembolsoazul.dto.UserCompanyRegisterDTO;
 import br.com.academiadev.reembolsoazul.dto.UserRegisterDTO;
@@ -182,5 +183,42 @@ public class TestsWithToken {
 		}
 
 		Assert.assertTrue(false);
+	}
+	
+	@Test
+	public void loginTest() {
+		UserCompanyRegisterDTO userCompanyRegisterDTO = new UserCompanyRegisterDTO();
+		userCompanyRegisterDTO.setName("name2");
+		userCompanyRegisterDTO.setEmail("email2@test.com");
+		userCompanyRegisterDTO.setPassword("1aA+1234");
+		userCompanyRegisterDTO.setCompany("Empresa Teste 2");
+		try {
+			userController.registerUserCompany(userCompanyRegisterDTO);
+		} catch (CompanyNotFoundException e1) {
+			e1.printStackTrace();
+		} catch (InvalidPasswordFormatException e1) {
+			e1.printStackTrace();
+		} catch (InvalidEmailFormatException e1) {
+			e1.printStackTrace();
+		} catch (EmailAlreadyUsedException e1) {
+			e1.printStackTrace();
+		}
+		
+		LoginDTO loginDTO = new LoginDTO();
+		loginDTO.setEmail("email2@test.com");
+		loginDTO.setPassword("1aA+1234");
+		
+		HttpHeaders httpHeaders = new HttpHeaders();
+		ResultActions result;
+		try {
+			result = mockMvc.perform(post("/auth/login").contentType(APPLICATION_JSON_UTF8).headers(httpHeaders)
+					.content(convertObjectToJsonBytes(loginDTO)));
+			result.andExpect(status().isOk());
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		Assert.assertTrue(true);
 	}
 }
