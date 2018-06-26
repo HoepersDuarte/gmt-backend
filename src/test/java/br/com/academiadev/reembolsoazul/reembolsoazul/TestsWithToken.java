@@ -221,4 +221,54 @@ public class TestsWithToken {
 		}
 		Assert.assertTrue(true);
 	}
+	
+	@Test
+	public void isAuth() throws InterruptedException {
+		UserCompanyRegisterDTO userCompanyRegisterDTO = new UserCompanyRegisterDTO();
+		userCompanyRegisterDTO.setName("name3");
+		userCompanyRegisterDTO.setEmail("email3@test.com");
+		userCompanyRegisterDTO.setPassword("1aA+1234");
+		userCompanyRegisterDTO.setCompany("Empresa Teste 3");
+		try {
+			userController.registerUserCompany(userCompanyRegisterDTO);
+		} catch (CompanyNotFoundException e1) {
+			e1.printStackTrace();
+		} catch (InvalidPasswordFormatException e1) {
+			e1.printStackTrace();
+		} catch (InvalidEmailFormatException e1) {
+			e1.printStackTrace();
+		} catch (EmailAlreadyUsedException e1) {
+			e1.printStackTrace();
+		}
+		
+		User user = userRepository.findByEmail("email3@test.com");
+		Thread.sleep(1000);
+		
+		String token = tokenHelper.generateToken(user.getEmail(), user.getUserType().toString(),
+				user.getCompany().getName(), null);
+		HttpHeaders httpHeaders = new HttpHeaders();
+		httpHeaders.add("Authorization", "Bearer " + token);
+		MvcResult result;
+		try {
+			result = mockMvc.perform(post("/auth/isauth").contentType(APPLICATION_JSON_UTF8).headers(httpHeaders)).andReturn();
+			System.out.println(result.getResponse().getContentAsString());
+			Assert.assertTrue(result.getResponse().getContentAsString().contains("true"));
+		} catch (Exception e) {
+			e.printStackTrace();
+			Assert.assertTrue(false);
+		}
+		
+		token = "test";
+		httpHeaders = new HttpHeaders();
+		httpHeaders.add("Authorization", "Bearer " + token);
+		try {
+			result = mockMvc.perform(post("/auth/isauth").contentType(APPLICATION_JSON_UTF8).headers(httpHeaders)).andReturn();
+			System.out.println(result.getResponse().getContentAsString());
+			Assert.assertTrue(result.getResponse().getContentAsString().contains("false"));
+			return;
+		} catch (Exception e) {
+			e.printStackTrace();
+			Assert.assertTrue(false);
+		}
+	}
 }
