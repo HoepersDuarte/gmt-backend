@@ -56,7 +56,7 @@ public class ReembolsoazulApplicationTests {
 	}
 
 	@Test
-	public void registerCompany() {
+	public void registerCompanyTest() {
 		CompanyRegisterDTO companyRegisterDTO = new CompanyRegisterDTO();
 		companyRegisterDTO.setName("Empresa 100");
 		companyController.register(companyRegisterDTO);
@@ -65,7 +65,7 @@ public class ReembolsoazulApplicationTests {
 	}
 
 	@Test
-	public void findByAdmCode() {
+	public void findByAdmCodeTest() {
 		// register company 1
 		CompanyRegisterDTO companyRegisterDTO1 = new CompanyRegisterDTO();
 		companyRegisterDTO1.setName("Empresa 1");
@@ -85,7 +85,7 @@ public class ReembolsoazulApplicationTests {
 	}
 
 	@Test
-	public void registerUser() {
+	public void registerUserTest() {
 		// register company 1
 		CompanyRegisterDTO companyRegisterDTO1 = new CompanyRegisterDTO();
 		companyRegisterDTO1.setName("Empresa 1");
@@ -103,7 +103,7 @@ public class ReembolsoazulApplicationTests {
 		// register the user
 		UserRegisterDTO userRegisterDTO = new UserRegisterDTO();
 		userRegisterDTO.setName("name1");
-		userRegisterDTO.setEmail("email1@example.com");
+		userRegisterDTO.setEmail("email10@example.com");
 		userRegisterDTO.setPassword("1aA+1234");
 		userRegisterDTO.setCompany(admCodeCompany1);
 		try {
@@ -119,16 +119,16 @@ public class ReembolsoazulApplicationTests {
 		}
 
 		// get the user registered
-		User user = userRepository.findByEmail("email1@example.com");
+		User user = userRepository.findByEmail("email10@example.com");
 		Assert.assertTrue(user.getName().equals("name1"));
-		Assert.assertTrue(user.getEmail().equals("email1@example.com"));
+		Assert.assertTrue(user.getEmail().equals("email10@example.com"));
 		Assert.assertTrue(passwordEncoder.matches("1aA+1234", user.getPassword()));
 		Assert.assertTrue(user.getUserType().equals(UserType.ROLE_ADMIN));
 		Assert.assertTrue(user.getCompany().getName().equals("Empresa 1"));
 	}
 	
 	@Test
-	public void register2UsersWithTheSameEmail() {
+	public void register2UsersWithTheSameEmailTest() {
 		// register company 1
 		CompanyRegisterDTO companyRegisterDTO1 = new CompanyRegisterDTO();
 		companyRegisterDTO1.setName("Empresa 1");
@@ -216,7 +216,7 @@ public class ReembolsoazulApplicationTests {
 	}
 
 	@Test
-	public void companyCodeGeneration() {
+	public void companyCodeGenerationTest() {
 		String companyName = "Empresa 1";
 		UserType userType = UserType.ROLE_ADMIN;
 		String hash1 = CompanyTokenHelper.generateToken(companyName, userType);
@@ -229,7 +229,7 @@ public class ReembolsoazulApplicationTests {
 	}
 
 	@Test
-	public void registerCompanyAndUser() {
+	public void registerCompanyAndUserTest() {
 		// register company 1
 		UserCompanyRegisterDTO userCompanyRegisterDTO = new UserCompanyRegisterDTO();
 		userCompanyRegisterDTO.setName("Pessoa 1");
