@@ -20,6 +20,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -34,6 +35,7 @@ import br.com.academiadev.reembolsoazul.controller.UserController;
 import br.com.academiadev.reembolsoazul.converter.RefundViewConverter;
 import br.com.academiadev.reembolsoazul.dto.CompanyRegisterDTO;
 import br.com.academiadev.reembolsoazul.dto.LoginDTO;
+import br.com.academiadev.reembolsoazul.dto.PasswordDTO;
 import br.com.academiadev.reembolsoazul.dto.RefundRegisterDTO;
 import br.com.academiadev.reembolsoazul.dto.RefundViewDTO;
 import br.com.academiadev.reembolsoazul.dto.UserCompanyRegisterDTO;
@@ -73,6 +75,9 @@ public class TestsWithToken {
 
 	@Autowired
 	private RefundViewConverter refundViewConverter;
+	
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 
 	@Autowired
 	private TokenHelper tokenHelper;
@@ -390,5 +395,55 @@ public class TestsWithToken {
 		Assert.assertTrue(refund.getUser().getName().equals(user.getName()));
 		Assert.assertTrue(refund.getRefundCategory().equals(RefundCategory.TRANSPORTE));
 		Assert.assertTrue(refund.getRefundStatus().equals(RefundStatus.WAITING));
+	}
+	
+	@Test
+	public void forgotPasswordTest() throws IOException, Exception {
+		// register company 1
+		CompanyRegisterDTO companyRegisterDTO1 = new CompanyRegisterDTO();
+		companyRegisterDTO1.setName("Empresa 1");
+		companyController.register(companyRegisterDTO1);
+		
+		// get the admin code from the first company
+		List<Company> companies = (List<Company>) companyRepository.findByName("Empresa 1");
+		String admCodeCompany1 = companies.get(0).getCompanyAdminCode();
+
+		// register the user
+		UserRegisterDTO userRegisterDTO = new UserRegisterDTO();
+		userRegisterDTO.setName("name50");
+		userRegisterDTO.setEmail("email50@example.com");
+		userRegisterDTO.setPassword("1aA+1234");
+		userRegisterDTO.setCompany(admCodeCompany1);
+		try {
+			userController.register(userRegisterDTO);
+		} catch (CompanyNotFoundException e) {
+			e.printStackTrace();
+		} catch (InvalidPasswordFormatException e) {
+			e.printStackTrace();
+		} catch (InvalidEmailFormatException e) {
+			e.printStackTrace();
+		} catch (EmailAlreadyUsedException e) {
+			e.printStackTrace();
+		}
+		
+		User user = userRepository.findByEmail("email50@example.com");
+		Thread.sleep(1000);
+		
+		Assert.assertTrue(passwordEncoder.matches("1aA+1234", user.getPassword()));
+		
+		PasswordDTO passwordDTO = new PasswordDTO();
+		passwordDTO.setPassword("12345aA+");
+		
+		String token = tokenHelper.generateToken(user.getEmail(), user.getUserType().toString(),
+				user.getCompany().getName(), null);
+		HttpHeaders httpHeaders = new HttpHeaders();
+		httpHeaders.add("Authorization", "Bearer " + token);
+		ResultActions result = mockMvc.perform(post("/user/redefinePassword").contentType(APPLICATION_JSON_UTF8).headers(httpHeaders)
+				.content(convertObjectToJsonBytes(passwordDTO)));
+		result.andExpect(status().isOk());
+		
+		user = userRepository.findByEmail("email50@example.com");
+		
+		Assert.assertTrue(passwordEncoder.matches("12345aA+", user.getPassword()));
 	}
 }
