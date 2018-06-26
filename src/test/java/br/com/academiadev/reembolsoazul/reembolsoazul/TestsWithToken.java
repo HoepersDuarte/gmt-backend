@@ -1,9 +1,11 @@
 package br.com.academiadev.reembolsoazul.reembolsoazul;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.nio.charset.Charset;
 import java.time.LocalDate;
@@ -20,6 +22,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -30,8 +33,10 @@ import br.com.academiadev.reembolsoazul.controller.CompanyController;
 import br.com.academiadev.reembolsoazul.controller.UserController;
 import br.com.academiadev.reembolsoazul.dto.CompanyRegisterDTO;
 import br.com.academiadev.reembolsoazul.dto.RefundRegisterDTO;
+import br.com.academiadev.reembolsoazul.dto.UserCompanyRegisterDTO;
 import br.com.academiadev.reembolsoazul.dto.UserRegisterDTO;
 import br.com.academiadev.reembolsoazul.exception.CompanyNotFoundException;
+import br.com.academiadev.reembolsoazul.exception.EmailAlreadyUsedException;
 import br.com.academiadev.reembolsoazul.exception.InvalidEmailFormatException;
 import br.com.academiadev.reembolsoazul.exception.InvalidPasswordFormatException;
 import br.com.academiadev.reembolsoazul.model.Company;
@@ -77,7 +82,7 @@ public class TestsWithToken {
 		mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
 		return mapper.writeValueAsBytes(object);
 	}
-
+	
 	@Test
 	public void registerRefund() throws IOException, Exception {
 		// register the company
@@ -138,5 +143,44 @@ public class TestsWithToken {
 		Assert.assertTrue(refund.getRefundCategory().equals(RefundCategory.ALIMENTACAO));
 		Assert.assertTrue(refund.getRefundStatus().equals(RefundStatus.WAITING));
 	}
+	
+	@Test
+	public void returnCompanyCodes() throws InterruptedException {
+		UserCompanyRegisterDTO userCompanyRegisterDTO = new UserCompanyRegisterDTO();
+		userCompanyRegisterDTO.setName("name1");
+		userCompanyRegisterDTO.setEmail("email@test.com");
+		userCompanyRegisterDTO.setPassword("1aA+1234");
+		userCompanyRegisterDTO.setCompany("Empresa Teste 1");
+		try {
+			userController.registerUserCompany(userCompanyRegisterDTO);
+		} catch (CompanyNotFoundException e1) {
+			e1.printStackTrace();
+		} catch (InvalidPasswordFormatException e1) {
+			e1.printStackTrace();
+		} catch (InvalidEmailFormatException e1) {
+			e1.printStackTrace();
+		} catch (EmailAlreadyUsedException e1) {
+			e1.printStackTrace();
+		}
 
+		
+		User user = userRepository.findByEmail("email@test.com");
+		Thread.sleep(1000);
+		
+		String token = tokenHelper.generateToken(user.getEmail(), user.getUserType().toString(),
+				user.getCompany().getName(), null);
+		HttpHeaders httpHeaders = new HttpHeaders();
+		httpHeaders.add("Authorization", "Bearer " + token);
+		MvcResult result;
+		try {
+			result = mockMvc.perform(get("/company/").contentType(APPLICATION_JSON_UTF8).headers(httpHeaders)).andReturn();
+			Assert.assertTrue(result.getResponse().getContentAsString().length() > 0);
+			return;
+		} catch (Exception e) {
+			e.printStackTrace();
+			Assert.assertTrue(false);
+		}
+
+		Assert.assertTrue(false);
+	}
 }

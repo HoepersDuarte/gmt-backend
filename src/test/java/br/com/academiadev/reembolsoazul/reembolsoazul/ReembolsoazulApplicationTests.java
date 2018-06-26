@@ -7,12 +7,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import br.com.academiadev.reembolsoazul.controller.CompanyController;
 import br.com.academiadev.reembolsoazul.controller.UserController;
 import br.com.academiadev.reembolsoazul.dto.CompanyRegisterDTO;
+import br.com.academiadev.reembolsoazul.dto.EmailVerificationDTO;
 import br.com.academiadev.reembolsoazul.dto.UserCompanyRegisterDTO;
 import br.com.academiadev.reembolsoazul.dto.UserRegisterDTO;
 import br.com.academiadev.reembolsoazul.exception.CompanyNotFoundException;
@@ -173,6 +175,44 @@ public class ReembolsoazulApplicationTests {
 			return;
 		}
 		Assert.assertTrue(false);
+	}
+	
+	@Test
+	public void availableEmailTest() {
+		EmailVerificationDTO emailVerificationDTO = new EmailVerificationDTO();
+		emailVerificationDTO.setEmail("endMail@example.com");
+		ResponseEntity<Boolean> verifyEmail = userController.verifyEmail(emailVerificationDTO);
+		Assert.assertEquals(true, verifyEmail.getBody());
+		
+		// register company 1
+		CompanyRegisterDTO companyRegisterDTO1 = new CompanyRegisterDTO();
+		companyRegisterDTO1.setName("Empresa 1");
+		companyController.register(companyRegisterDTO1);
+
+		// get the admin code from the first company
+		List<Company> companies = (List<Company>) companyRepository.findByName("Empresa 1");
+		String userCodeCompany1 = companies.get(0).getCompanyUserCode();
+
+		// register the user 1
+		UserRegisterDTO userRegisterDTO = new UserRegisterDTO();
+		userRegisterDTO.setName("name1");
+		userRegisterDTO.setEmail("endMail@example.com");
+		userRegisterDTO.setPassword("1aA+1234");
+		userRegisterDTO.setCompany(userCodeCompany1);
+		try {
+			userController.register(userRegisterDTO);
+		} catch (CompanyNotFoundException e) {
+			e.printStackTrace();
+		} catch (InvalidPasswordFormatException e) {
+			e.printStackTrace();
+		} catch (InvalidEmailFormatException e) {
+			e.printStackTrace();
+		} catch (EmailAlreadyUsedException e) {
+			e.printStackTrace();
+		}
+		verifyEmail = userController.verifyEmail(emailVerificationDTO);
+		Assert.assertEquals(false, verifyEmail.getBody());
+		
 	}
 
 	@Test
