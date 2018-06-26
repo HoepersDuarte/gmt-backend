@@ -446,4 +446,66 @@ public class TestsWithToken {
 		
 		Assert.assertTrue(passwordEncoder.matches("12345aA+", user.getPassword()));
 	}
+	
+	@Test
+	public void findAllRefundsTest() throws IOException, Exception {
+		// register the company
+		CompanyRegisterDTO companyRegisterDTO1 = new CompanyRegisterDTO();
+		companyRegisterDTO1.setName("Empresa 1");
+		companyController.register(companyRegisterDTO1);
+
+		// get the admin code from the first company
+		List<Company> companies = (List<Company>) companyRepository.findByName("Empresa 1");
+		String userCodeCompany1 = companies.get(0).getCompanyUserCode();
+
+		// register the user
+		UserRegisterDTO userDTO = new UserRegisterDTO();
+		userDTO.setName("name55");
+		userDTO.setEmail("email55@example.com");
+		userDTO.setPassword("1aA+1234");
+		userDTO.setCompany(userCodeCompany1);
+		try {
+			userController.register(userDTO);
+		} catch (CompanyNotFoundException e) {
+			e.printStackTrace();
+		} catch (InvalidPasswordFormatException e) {
+			e.printStackTrace();
+		} catch (InvalidEmailFormatException e) {
+			e.printStackTrace();
+		}
+
+		// get the user registered
+		User user = userRepository.findByEmail("email55@example.com");
+		Thread.sleep(1000);// o tempo de criacao do token e ultima modificacao de senha estavam em
+							// conflito, provavelmente por um deles n pegar os milisegundos
+
+		// register the refund
+		RefundRegisterDTO refundDTO = new RefundRegisterDTO();
+		refundDTO.setDate("10/10/2010");
+		refundDTO.setFile("file");
+		refundDTO.setName("RefundName551");
+		refundDTO.setRefundCategory("ALIMENTACAO");
+		refundDTO.setValue("1000");
+		
+		RefundRegisterDTO refundDTO2 = new RefundRegisterDTO();
+		refundDTO2.setDate("10/10/2010");
+		refundDTO2.setFile("file");
+		refundDTO2.setName("RefundName552");
+		refundDTO2.setRefundCategory("ALIMENTACAO");
+		refundDTO2.setValue("1000");
+
+		String token = tokenHelper.generateToken(user.getEmail(), user.getUserType().toString(),
+				user.getCompany().getName(), null);
+		HttpHeaders httpHeaders = new HttpHeaders();
+		httpHeaders.add("Authorization", "Bearer " + token);
+		ResultActions result = mockMvc.perform(post("/refund/").contentType(APPLICATION_JSON_UTF8).headers(httpHeaders)
+				.content(convertObjectToJsonBytes(refundDTO)));
+		result.andExpect(status().isOk());
+		result = mockMvc.perform(post("/refund/").contentType(APPLICATION_JSON_UTF8).headers(httpHeaders)
+				.content(convertObjectToJsonBytes(refundDTO2)));
+		result.andExpect(status().isOk());
+		
+		MvcResult result2 = mockMvc.perform(get("/refund/").contentType(APPLICATION_JSON_UTF8).headers(httpHeaders)).andReturn();
+		Assert.assertTrue(result2.getResponse().getContentAsString().contains("RefundName551") && result2.getResponse().getContentAsString().contains("RefundName552"));
+	}
 }
