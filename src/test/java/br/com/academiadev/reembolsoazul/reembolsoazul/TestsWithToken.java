@@ -251,7 +251,6 @@ public class TestsWithToken {
 		MvcResult result;
 		try {
 			result = mockMvc.perform(post("/auth/isauth").contentType(APPLICATION_JSON_UTF8).headers(httpHeaders)).andReturn();
-			System.out.println(result.getResponse().getContentAsString());
 			Assert.assertTrue(result.getResponse().getContentAsString().contains("true"));
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -263,12 +262,53 @@ public class TestsWithToken {
 		httpHeaders.add("Authorization", "Bearer " + token);
 		try {
 			result = mockMvc.perform(post("/auth/isauth").contentType(APPLICATION_JSON_UTF8).headers(httpHeaders)).andReturn();
-			System.out.println(result.getResponse().getContentAsString());
 			Assert.assertTrue(result.getResponse().getContentAsString().contains("false"));
 			return;
 		} catch (Exception e) {
 			e.printStackTrace();
 			Assert.assertTrue(false);
 		}
+	}
+	
+	@Test
+	public void returnCompaniesException() throws InterruptedException {
+		UserCompanyRegisterDTO userCompanyRegisterDTO = new UserCompanyRegisterDTO();
+		userCompanyRegisterDTO.setName("name1");
+		userCompanyRegisterDTO.setEmail("email@test.com");
+		userCompanyRegisterDTO.setPassword("1aA+1234");
+		userCompanyRegisterDTO.setCompany("Empresa Teste 1");
+		try {
+			userController.registerUserCompany(userCompanyRegisterDTO);
+		} catch (CompanyNotFoundException e1) {
+			e1.printStackTrace();
+		} catch (InvalidPasswordFormatException e1) {
+			e1.printStackTrace();
+		} catch (InvalidEmailFormatException e1) {
+			e1.printStackTrace();
+		} catch (EmailAlreadyUsedException e1) {
+			e1.printStackTrace();
+		}
+
+		
+		User user = userRepository.findByEmail("email@test.com");
+		Thread.sleep(1000);
+		
+		String token = tokenHelper.generateToken(user.getEmail(), user.getUserType().toString(),
+				user.getCompany().getName(), null);
+		HttpHeaders httpHeaders = new HttpHeaders();
+		httpHeaders.add("Authorization", "Bearer " + token);
+		MvcResult result;
+		try {
+			result = mockMvc.perform(get("/refund/category").contentType(APPLICATION_JSON_UTF8).headers(httpHeaders)).andReturn();
+			Assert.assertTrue(result.getResponse().getContentAsString().contains("HOSPEDAGEM") &&
+								result.getResponse().getContentAsString().contains("ALIMENTACAO") &&
+								result.getResponse().getContentAsString().contains("TRANSPORTE"));
+			return;
+		} catch (Exception e) {
+			e.printStackTrace();
+			Assert.assertTrue(false);
+		}
+
+		Assert.assertTrue(false);
 	}
 }
