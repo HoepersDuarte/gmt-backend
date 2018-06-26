@@ -1,11 +1,11 @@
 package br.com.academiadev.reembolsoazul.reembolsoazul;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.nio.charset.Charset;
 import java.time.LocalDate;
@@ -31,9 +31,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import br.com.academiadev.reembolsoazul.config.jwt.TokenHelper;
 import br.com.academiadev.reembolsoazul.controller.CompanyController;
 import br.com.academiadev.reembolsoazul.controller.UserController;
+import br.com.academiadev.reembolsoazul.converter.RefundViewConverter;
 import br.com.academiadev.reembolsoazul.dto.CompanyRegisterDTO;
 import br.com.academiadev.reembolsoazul.dto.LoginDTO;
 import br.com.academiadev.reembolsoazul.dto.RefundRegisterDTO;
+import br.com.academiadev.reembolsoazul.dto.RefundViewDTO;
 import br.com.academiadev.reembolsoazul.dto.UserCompanyRegisterDTO;
 import br.com.academiadev.reembolsoazul.dto.UserRegisterDTO;
 import br.com.academiadev.reembolsoazul.exception.CompanyNotFoundException;
@@ -70,6 +72,9 @@ public class TestsWithToken {
 	private RefundRepository refundRepository;
 
 	@Autowired
+	private RefundViewConverter refundViewConverter;
+
+	@Autowired
 	private TokenHelper tokenHelper;
 
 	@Autowired
@@ -83,9 +88,9 @@ public class TestsWithToken {
 		mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
 		return mapper.writeValueAsBytes(object);
 	}
-	
+
 	@Test
-	public void registerRefund() throws IOException, Exception {
+	public void registerRefundTest() throws IOException, Exception {
 		// register the company
 		CompanyRegisterDTO companyRegisterDTO1 = new CompanyRegisterDTO();
 		companyRegisterDTO1.setName("Empresa 1");
@@ -144,9 +149,9 @@ public class TestsWithToken {
 		Assert.assertTrue(refund.getRefundCategory().equals(RefundCategory.ALIMENTACAO));
 		Assert.assertTrue(refund.getRefundStatus().equals(RefundStatus.WAITING));
 	}
-	
+
 	@Test
-	public void returnCompanyCodes() throws InterruptedException {
+	public void returnCompanyCodesTest() throws InterruptedException {
 		UserCompanyRegisterDTO userCompanyRegisterDTO = new UserCompanyRegisterDTO();
 		userCompanyRegisterDTO.setName("name1");
 		userCompanyRegisterDTO.setEmail("email@test.com");
@@ -164,17 +169,17 @@ public class TestsWithToken {
 			e1.printStackTrace();
 		}
 
-		
 		User user = userRepository.findByEmail("email@test.com");
 		Thread.sleep(1000);
-		
+
 		String token = tokenHelper.generateToken(user.getEmail(), user.getUserType().toString(),
 				user.getCompany().getName(), null);
 		HttpHeaders httpHeaders = new HttpHeaders();
 		httpHeaders.add("Authorization", "Bearer " + token);
 		MvcResult result;
 		try {
-			result = mockMvc.perform(get("/company/").contentType(APPLICATION_JSON_UTF8).headers(httpHeaders)).andReturn();
+			result = mockMvc.perform(get("/company/").contentType(APPLICATION_JSON_UTF8).headers(httpHeaders))
+					.andReturn();
 			Assert.assertTrue(result.getResponse().getContentAsString().length() > 0);
 			return;
 		} catch (Exception e) {
@@ -184,7 +189,7 @@ public class TestsWithToken {
 
 		Assert.assertTrue(false);
 	}
-	
+
 	@Test
 	public void loginTest() {
 		UserCompanyRegisterDTO userCompanyRegisterDTO = new UserCompanyRegisterDTO();
@@ -203,11 +208,11 @@ public class TestsWithToken {
 		} catch (EmailAlreadyUsedException e1) {
 			e1.printStackTrace();
 		}
-		
+
 		LoginDTO loginDTO = new LoginDTO();
 		loginDTO.setEmail("email2@test.com");
 		loginDTO.setPassword("1aA+1234");
-		
+
 		HttpHeaders httpHeaders = new HttpHeaders();
 		ResultActions result;
 		try {
@@ -221,9 +226,9 @@ public class TestsWithToken {
 		}
 		Assert.assertTrue(true);
 	}
-	
+
 	@Test
-	public void isAuth() throws InterruptedException {
+	public void isAuthTest() throws InterruptedException {
 		UserCompanyRegisterDTO userCompanyRegisterDTO = new UserCompanyRegisterDTO();
 		userCompanyRegisterDTO.setName("name3");
 		userCompanyRegisterDTO.setEmail("email3@test.com");
@@ -240,28 +245,30 @@ public class TestsWithToken {
 		} catch (EmailAlreadyUsedException e1) {
 			e1.printStackTrace();
 		}
-		
+
 		User user = userRepository.findByEmail("email3@test.com");
 		Thread.sleep(1000);
-		
+
 		String token = tokenHelper.generateToken(user.getEmail(), user.getUserType().toString(),
 				user.getCompany().getName(), null);
 		HttpHeaders httpHeaders = new HttpHeaders();
 		httpHeaders.add("Authorization", "Bearer " + token);
 		MvcResult result;
 		try {
-			result = mockMvc.perform(post("/auth/isauth").contentType(APPLICATION_JSON_UTF8).headers(httpHeaders)).andReturn();
+			result = mockMvc.perform(post("/auth/isauth").contentType(APPLICATION_JSON_UTF8).headers(httpHeaders))
+					.andReturn();
 			Assert.assertTrue(result.getResponse().getContentAsString().contains("true"));
 		} catch (Exception e) {
 			e.printStackTrace();
 			Assert.assertTrue(false);
 		}
-		
+
 		token = "test";
 		httpHeaders = new HttpHeaders();
 		httpHeaders.add("Authorization", "Bearer " + token);
 		try {
-			result = mockMvc.perform(post("/auth/isauth").contentType(APPLICATION_JSON_UTF8).headers(httpHeaders)).andReturn();
+			result = mockMvc.perform(post("/auth/isauth").contentType(APPLICATION_JSON_UTF8).headers(httpHeaders))
+					.andReturn();
 			Assert.assertTrue(result.getResponse().getContentAsString().contains("false"));
 			return;
 		} catch (Exception e) {
@@ -269,9 +276,9 @@ public class TestsWithToken {
 			Assert.assertTrue(false);
 		}
 	}
-	
+
 	@Test
-	public void returnCompaniesException() throws InterruptedException {
+	public void returnCategoriesTest() throws InterruptedException {
 		UserCompanyRegisterDTO userCompanyRegisterDTO = new UserCompanyRegisterDTO();
 		userCompanyRegisterDTO.setName("name1");
 		userCompanyRegisterDTO.setEmail("email@test.com");
@@ -289,20 +296,20 @@ public class TestsWithToken {
 			e1.printStackTrace();
 		}
 
-		
 		User user = userRepository.findByEmail("email@test.com");
 		Thread.sleep(1000);
-		
+
 		String token = tokenHelper.generateToken(user.getEmail(), user.getUserType().toString(),
 				user.getCompany().getName(), null);
 		HttpHeaders httpHeaders = new HttpHeaders();
 		httpHeaders.add("Authorization", "Bearer " + token);
 		MvcResult result;
 		try {
-			result = mockMvc.perform(get("/refund/category").contentType(APPLICATION_JSON_UTF8).headers(httpHeaders)).andReturn();
-			Assert.assertTrue(result.getResponse().getContentAsString().contains("HOSPEDAGEM") &&
-								result.getResponse().getContentAsString().contains("ALIMENTACAO") &&
-								result.getResponse().getContentAsString().contains("TRANSPORTE"));
+			result = mockMvc.perform(get("/refund/category").contentType(APPLICATION_JSON_UTF8).headers(httpHeaders))
+					.andReturn();
+			Assert.assertTrue(result.getResponse().getContentAsString().contains("HOSPEDAGEM")
+					&& result.getResponse().getContentAsString().contains("ALIMENTACAO")
+					&& result.getResponse().getContentAsString().contains("TRANSPORTE"));
 			return;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -310,5 +317,78 @@ public class TestsWithToken {
 		}
 
 		Assert.assertTrue(false);
+	}
+
+	@Test
+	public void updateRefundTest() throws IOException, Exception {
+		// register the company
+		CompanyRegisterDTO companyRegisterDTO1 = new CompanyRegisterDTO();
+		companyRegisterDTO1.setName("Empresa 1");
+		companyController.register(companyRegisterDTO1);
+
+		// get the admin code from the first company
+		List<Company> companies = (List<Company>) companyRepository.findByName("Empresa 1");
+		String userCodeCompany1 = companies.get(0).getCompanyUserCode();
+
+		// register the user
+		UserRegisterDTO userDTO = new UserRegisterDTO();
+		userDTO.setName("name4");
+		userDTO.setEmail("email4@example.com");
+		userDTO.setPassword("1aA+1234");
+		userDTO.setCompany(userCodeCompany1);
+		try {
+			userController.register(userDTO);
+		} catch (CompanyNotFoundException e) {
+			e.printStackTrace();
+		} catch (InvalidPasswordFormatException e) {
+			e.printStackTrace();
+		} catch (InvalidEmailFormatException e) {
+			e.printStackTrace();
+		}
+
+		// get the user registered
+		User user = userRepository.findByEmail("email4@example.com");
+		Thread.sleep(1000);
+
+		// register the refund
+		RefundRegisterDTO refundDTO = new RefundRegisterDTO();
+		refundDTO.setDate("10/10/2010");
+		refundDTO.setFile("file");
+		refundDTO.setName("RefundName2");
+		refundDTO.setRefundCategory("ALIMENTACAO");
+		refundDTO.setValue("1000");
+
+		String token = tokenHelper.generateToken(user.getEmail(), user.getUserType().toString(),
+				user.getCompany().getName(), null);
+		HttpHeaders httpHeaders = new HttpHeaders();
+		httpHeaders.add("Authorization", "Bearer " + token);
+		ResultActions result = mockMvc.perform(post("/refund/").contentType(APPLICATION_JSON_UTF8).headers(httpHeaders)
+				.content(convertObjectToJsonBytes(refundDTO)));
+		result.andExpect(status().isOk());
+
+		// get the refund registered
+		Refund refund = ((List<Refund>) refundRepository.findByName("RefundName2")).get(0);
+
+		RefundViewDTO refundViewDTO = refundViewConverter.toDTO(refund);
+		refundViewDTO.setRefundCategory("TRANSPORTE");
+		refundViewDTO.setValue("500");
+		refundViewDTO.setDate("15/05/2015");
+
+		httpHeaders = new HttpHeaders();
+		httpHeaders.add("Authorization", "Bearer " + token);
+		result = mockMvc.perform(put("/refund/").contentType(APPLICATION_JSON_UTF8).headers(httpHeaders)
+				.content(convertObjectToJsonBytes(refundViewDTO)));
+		result.andExpect(status().isOk());
+
+		refund = ((List<Refund>) refundRepository.findByName("RefundName2")).get(0);
+
+		Assert.assertTrue(refund.getName().equals("RefundName2"));
+		Assert.assertTrue(refund.getValue().compareTo(new BigDecimal("500")) == 0);
+		Assert.assertTrue(refund.getFile().equals("file"));
+		Assert.assertTrue(
+				refund.getDate().equals(LocalDate.parse("15/05/2015", DateTimeFormatter.ofPattern("dd/MM/yyyy"))));
+		Assert.assertTrue(refund.getUser().getName().equals(user.getName()));
+		Assert.assertTrue(refund.getRefundCategory().equals(RefundCategory.TRANSPORTE));
+		Assert.assertTrue(refund.getRefundStatus().equals(RefundStatus.WAITING));
 	}
 }
