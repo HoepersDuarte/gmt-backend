@@ -1,11 +1,11 @@
 package br.com.academiadev.reembolsoazul.exception;
 
-public class EmailAlreadyUsedException extends Exception {
+public class EmailAlreadyUsedException extends APIException {
 
 	private static final long serialVersionUID = 1L;
-	private final String message = "Email ja utilizado";
 
-	public String getMessage() {
-		return message;
-	};
+	public EmailAlreadyUsedException() {
+		super("Email ja utilizado", "");
+	}
+
 }

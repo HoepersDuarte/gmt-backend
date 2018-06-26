@@ -64,15 +64,15 @@ public class UserController {
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
-	@ApiOperation(value = "Retorna todos os usuarios cadastrados", response = UserViewDTO[].class)
+	@ApiOperation(value = "Retorna todos os usuarios cadastrados na empresa relacionada ao token", response = UserViewDTO[].class)
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Lista recebida com sucesso") })
 	@ApiImplicitParams({ //
 			@ApiImplicitParam(name = "Authorization", value = "Authorization token", required = true, dataType = "string", paramType = "header") //
 	})
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@GetMapping("/")
-	public ResponseEntity<List<UserViewDTO>> getAll() {
-		return new ResponseEntity<>(userService.findAll(), HttpStatus.OK);
+	public ResponseEntity<List<UserViewDTO>> getAllFromCompany() throws UserNotFoundException {
+		return new ResponseEntity<>(userService.findAllFromCompany(), HttpStatus.OK);
 	}
 
 	@ApiOperation(value = "Retorna se um email esta disponivel", response = Boolean.class)

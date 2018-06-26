@@ -126,8 +126,10 @@ public class UserService {
 		return userRepository.findByEmail(email);
 	}
 
-	public List<UserViewDTO> findAll() {
-		return Util.toList(userRepository.findAll()).stream().map(e -> {
+	public List<UserViewDTO> findAllFromCompany() throws UserNotFoundException {
+		User user = findUserByToken();
+
+		return Util.toList(userRepository.findByCompany(user.getCompany())).stream().map(e -> {
 			return userViewConverter.toDTO(e);
 		}).collect(Collectors.toList());
 	}
