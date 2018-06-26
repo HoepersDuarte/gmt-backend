@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,6 +17,7 @@ import br.com.academiadev.reembolsoazul.dto.RefundRegisterDTO;
 import br.com.academiadev.reembolsoazul.dto.RefundStatusAssignDTO;
 import br.com.academiadev.reembolsoazul.dto.RefundViewDTO;
 import br.com.academiadev.reembolsoazul.exception.RefundFromOtherCompanyException;
+import br.com.academiadev.reembolsoazul.exception.RefundFromOtherUserException;
 import br.com.academiadev.reembolsoazul.exception.RefundNotFoundException;
 import br.com.academiadev.reembolsoazul.exception.UserNotFoundException;
 import br.com.academiadev.reembolsoazul.service.RefundService;
@@ -49,6 +51,21 @@ public class RefundController {
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
+	@ApiOperation(value = "Altera um reebolso")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Alterado com sucesso"), //
+			@ApiResponse(code = 400, message = "Entrada invalida"), //
+	})
+	@ApiImplicitParams({ //
+			@ApiImplicitParam(name = "Authorization", value = "Authorization token", required = true, dataType = "string", paramType = "header") //
+	})
+	@PreAuthorize("hasRole('ROLE_COMMONUSER')")
+	@PutMapping("/")
+	public ResponseEntity<RefundViewDTO> update(@RequestBody RefundViewDTO refundDTO)
+			throws UserNotFoundException, RefundNotFoundException, RefundFromOtherUserException {
+		refundService.update(refundDTO);
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+	
 	@ApiOperation(value = "Retorna todos os reembolsos cadastrados do usuario ou empresa relacionada", response = RefundRegisterDTO[].class)
 	@ApiImplicitParams({ //
 			@ApiImplicitParam(name = "Authorization", value = "Authorization token", required = true, dataType = "string", paramType = "header") //

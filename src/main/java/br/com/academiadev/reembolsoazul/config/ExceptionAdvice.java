@@ -20,6 +20,7 @@ import br.com.academiadev.reembolsoazul.exception.EmailAlreadyUsedException;
 import br.com.academiadev.reembolsoazul.exception.InvalidEmailFormatException;
 import br.com.academiadev.reembolsoazul.exception.InvalidPasswordFormatException;
 import br.com.academiadev.reembolsoazul.exception.RefundFromOtherCompanyException;
+import br.com.academiadev.reembolsoazul.exception.RefundFromOtherUserException;
 import br.com.academiadev.reembolsoazul.exception.RefundNotFoundException;
 import br.com.academiadev.reembolsoazul.exception.UserNotFoundException;
 
@@ -108,6 +109,15 @@ public class ExceptionAdvice {
 	@ResponseStatus(HttpStatus.UNAUTHORIZED)
 	@ResponseBody
 	public ResponseEntity<Map<String, Object>> handleRefundFromOtherCompanyException(final Exception exception,
+			final WebRequest request) {
+		log.error(exception.getMessage(), exception);
+		return getDefaultErrorResponse(exception.getMessage(), HttpStatus.UNAUTHORIZED);
+	}
+	
+	@ExceptionHandler(value = RefundFromOtherUserException.class)
+	@ResponseStatus(HttpStatus.UNAUTHORIZED)
+	@ResponseBody
+	public ResponseEntity<Map<String, Object>> handleRefundFromOtherUserException(final Exception exception,
 			final WebRequest request) {
 		log.error(exception.getMessage(), exception);
 		return getDefaultErrorResponse(exception.getMessage(), HttpStatus.UNAUTHORIZED);

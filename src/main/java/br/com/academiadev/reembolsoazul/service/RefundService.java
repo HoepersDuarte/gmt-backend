@@ -1,5 +1,8 @@
 package br.com.academiadev.reembolsoazul.service;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -15,6 +18,7 @@ import br.com.academiadev.reembolsoazul.dto.RefundRegisterDTO;
 import br.com.academiadev.reembolsoazul.dto.RefundStatusAssignDTO;
 import br.com.academiadev.reembolsoazul.dto.RefundViewDTO;
 import br.com.academiadev.reembolsoazul.exception.RefundFromOtherCompanyException;
+import br.com.academiadev.reembolsoazul.exception.RefundFromOtherUserException;
 import br.com.academiadev.reembolsoazul.exception.RefundNotFoundException;
 import br.com.academiadev.reembolsoazul.exception.UserNotFoundException;
 import br.com.academiadev.reembolsoazul.model.Refund;
@@ -45,6 +49,27 @@ public class RefundService {
 		refund.setRefundStatus(RefundStatus.WAITING);
 		refund.setUser(userService.findUserByToken());
 
+		refundRepository.save(refund);
+	}
+	
+	public void update(RefundViewDTO refundDTO) throws UserNotFoundException, RefundNotFoundException, RefundFromOtherUserException {
+		User user = userService.findUserByToken();
+		
+		Refund refund = refundRepository.findById(refundDTO.getId());
+		if(refund == null) {
+			throw new RefundNotFoundException();
+		}
+		
+		if(refund.getUser() != user) {
+			throw new RefundFromOtherUserException();
+		}
+		
+		refund.setDate(LocalDate.parse(refundDTO.getDate(), DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+		refund.setFile(refundDTO.getFile());
+		refund.setName(refundDTO.getName());
+		refund.setRefundCategory(RefundCategory.valueOf(refundDTO.getRefundCategory()));
+		refund.setValue(new BigDecimal(refundDTO.getValue()));
+		
 		refundRepository.save(refund);
 	}
 
